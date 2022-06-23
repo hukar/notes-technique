@@ -1,0 +1,37 @@
+---
+uti: com.xamarin.workbook
+id: aa24271c-4be4-4425-aac9-8bd05010e1f0
+title: 01-first-program
+platforms:
+- DotNetCore
+---
+
+# hello first program
+
+## Une introduction à C#
+
+## `.net`
+
+`.net` est composé de deux éléments :
+
+1. CLR Common Language Runtime
+
+2. Les bibliothèques de classes
+
+C# est un langage de la plateforme `.net`
+
+## CLR
+
+Quand C# est compilé, cela produit un code intermédiaire : IL Code
+
+**IL Code:** Intermediate Language Code
+
+Pour obtenir le code machine, c’est la CLR qui va compilé en temps réel :
+
+**JIT** Just In Time compilation
+
+## namespace
+
+Pour organiser les classes d’une application, on a des containeur: les `namespace`
+
+Les `namespace` sont des containeur pour classes en relation

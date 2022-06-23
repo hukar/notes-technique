@@ -1,0 +1,38 @@
+---
+uti: com.xamarin.workbook
+id: b1ac18ff-93e5-4563-b8d3-68bc989a5de6
+title: ref-test
+platforms:
+- DotNetCore
+---
+
+```csharp
+Console.WriteLine("quelque chose");
+```
+
+```csharp
+public class Book
+{
+    public Book(string name) {
+        Name = name;
+    }
+
+    public string Name;
+}
+
+public void SetBookName(ref Book book, string name) {
+    book = new Book(name);
+    // book.Name = name;
+}
+
+Book book1 = new Book("book one");
+Console.WriteLine(book1.Name);
+```
+
+```csharp
+SetBookName(ref book1, "new super name");
+```
+
+```csharp
+Console.WriteLine(book1.Name);
+```

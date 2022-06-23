@@ -1,0 +1,43 @@
+---
+uti: com.xamarin.workbook
+id: b6cfdbd1-bbee-473a-8522-4742b673365b
+title: event
+platforms:
+- DotNetCore
+---
+
+```csharp
+delegate void OrderAddedDelegate(object sender, EventArgs args);
+
+class Order
+{
+    public void AddOrder()
+    {
+        Console.WriteLine("adding order");
+        
+            OrderAdded(this, new EventArgs());
+        
+    } 
+    
+    public event OrderAddedDelegate OrderAdded;
+}
+
+void OnOrderAdded(object sender, EventArgs e)
+{
+    Console.WriteLine("Order added");
+}
+
+void LogOrderAdded(object sender, EventArgs e)
+{
+    Console.WriteLine("Log Order");
+}
+
+var order = new Order();
+
+order.AddOrder();
+
+order.OrderAdded += OnOrderAdded;
+order.OrderAdded += LogOrderAdded;
+
+order.AddOrder();
+```

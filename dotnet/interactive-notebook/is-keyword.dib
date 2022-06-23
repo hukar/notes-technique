@@ -1,0 +1,37 @@
+#!markdown
+
+# Mot clé `is`
+
+Permet de vérifier qu'un objet est d'un type particulier.
+
+#!csharp
+
+class Robot {
+    public string Name { get; set; }
+}
+
+#!csharp
+
+Robot r = new() { Name = "Rr" };
+
+if (r is Robot)
+{
+    Console.WriteLine("r is Robot");
+}
+
+if (r is Robot Rr)
+{
+    Console.WriteLine("r is Robot Rr");
+}
+
+#!markdown
+
+Dans le deuxième exemple `Rr` est un alias de `r`
+
+#!csharp
+
+Console.WriteLine($"Rr : {Rr.Name}");
+
+Rr.Name = "RoBo";
+
+Console.WriteLine($"r : {r.Name}");

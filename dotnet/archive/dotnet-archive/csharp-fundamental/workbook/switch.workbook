@@ -1,0 +1,64 @@
+---
+uti: com.xamarin.workbook
+id: f9f6d26b-0e00-4ee7-bc76-5158e36814d4
+title: switch
+platforms:
+- DotNetCore
+---
+
+```csharp
+var letter = 'A';
+```
+
+```csharp
+switch(letter)
+{
+    case 'A':
+    case 'B':
+        Console.WriteLine("hello A or B");
+        break;
+}
+```
+
+```csharp
+class Titi {}
+
+var a = new Titi();
+```
+
+```csharp
+class Toto {}
+var b = new Toto();
+```
+
+```csharp
+class Tata {}
+var c = new Tata();
+```
+
+```csharp
+public void Test(Object o) {
+    switch(o)
+    {
+        case Titi t :
+            Console.WriteLine("titi");
+            break;
+        case Toto t :
+            Console.WriteLine("toto");
+            break;
+        case Tata t :
+            Console.WriteLine("tata");
+            break;
+    }
+}
+
+Test(a);
+Test(b);
+Test(c);
+```
+
+```csharp
+double dede = 7.8;
+
+Console.WriteLine($"{nameof(dede)}");
+```

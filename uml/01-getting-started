@@ -1,0 +1,36 @@
+# 01 Getting Started `UML`
+
+Playlist `Youtube` :
+
+https://www.youtube.com/playlist?list=PLRR7wjtXb1cBQCE8ddM0B1D9DFj-WL3BX
+
+## 2 méthodes connues
+
+### `Merise` 
+
+1970
+
+principalement `MCD` mais il existe plusieurs type de diagramme.
+
+
+
+### `UML`
+
+1997 9 diagrammes
+
+Orienté vers la conception objet.
+
+`bdd` relationnelle ou objet
+
+ 2006 13 diagrammes
+
+
+## Hiérarchie : les `13` diagrammes
+
+<img src="assets/thirty-diagrams.png" alt="thirty-diagrams" style="zoom:70%;" />
+
+Deux grandes branches :
+
+- Les diagrammes de structure
+- Les diagrammes de comportement (introduis la notion de temps)
+

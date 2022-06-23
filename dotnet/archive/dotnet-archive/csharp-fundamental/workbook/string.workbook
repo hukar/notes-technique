@@ -1,0 +1,83 @@
+---
+uti: com.xamarin.workbook
+id: 83cc31f3-c659-4491-8b79-36faaec4c849
+title: string
+platforms:
+- DotNetCore
+---
+
+```csharp
+int num;
+
+public void AddTen(ref int n)
+{
+    n = 7;
+    n += 10;
+    Console.WriteLine($"inner display {n}");
+}
+
+AddTen(ref num);
+
+Console.WriteLine($"outer display {num}");
+```
+
+```csharp
+public void TransformToTenOut(out int n)
+{
+    n = 10;
+    Console.WriteLine($"inner display {n}");
+}
+
+TransformToTenOut(out num);
+
+Console.WriteLine($"outer display {num}");
+```
+
+```csharp
+public struct Robot
+{
+    public string Name;
+    public int Power;
+
+    public Robot(string s, int nb)
+    {
+        Name = s;
+        Power = nb;
+    }
+}
+
+var rbt = new Robot("ttt56", 670);
+
+public void BoostPower(Robot r, int pwr){
+    r.Power += pwr;
+    Console.WriteLine($"inside method {r.Power}");
+}
+
+BoostPower(rbt, 100);
+Console.WriteLine($"outside method {rbt.Power}");
+```
+
+```csharp
+public void BoostPowerByRef(ref Robot r, int pwr){
+    r.Power += pwr;
+    Console.WriteLine($"inside method {r.Power}");
+}
+
+BoostPowerByRef(ref rbt, 100);
+Console.WriteLine($"outside method {rbt.Power}");
+```
+
+```csharp
+var s = "titi au dodo";
+```
+
+```csharp
+public void ChangeString(string s) {
+    Console.WriteLine(s[2]);
+    s[2] = "e";
+    Console.WriteLine($"inside {s}");
+}
+
+ChangeString(s);
+Console.WriteLine($"outside {s}")
+```

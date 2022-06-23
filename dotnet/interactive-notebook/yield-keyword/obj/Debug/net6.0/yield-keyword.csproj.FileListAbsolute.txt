@@ -1,0 +1,15 @@
+/Users/hukar/Library/Mobile Documents/27N4MQEA55~pro~writer/Documents/notes-technique/dotnet/interactive-notebook/yield-keyword/bin/Debug/net6.0/yield-keyword
+/Users/hukar/Library/Mobile Documents/27N4MQEA55~pro~writer/Documents/notes-technique/dotnet/interactive-notebook/yield-keyword/bin/Debug/net6.0/yield-keyword.deps.json
+/Users/hukar/Library/Mobile Documents/27N4MQEA55~pro~writer/Documents/notes-technique/dotnet/interactive-notebook/yield-keyword/bin/Debug/net6.0/yield-keyword.runtimeconfig.json
+/Users/hukar/Library/Mobile Documents/27N4MQEA55~pro~writer/Documents/notes-technique/dotnet/interactive-notebook/yield-keyword/bin/Debug/net6.0/yield-keyword.dll
+/Users/hukar/Library/Mobile Documents/27N4MQEA55~pro~writer/Documents/notes-technique/dotnet/interactive-notebook/yield-keyword/bin/Debug/net6.0/ref/yield-keyword.dll
+/Users/hukar/Library/Mobile Documents/27N4MQEA55~pro~writer/Documents/notes-technique/dotnet/interactive-notebook/yield-keyword/bin/Debug/net6.0/yield-keyword.pdb
+/Users/hukar/Library/Mobile Documents/27N4MQEA55~pro~writer/Documents/notes-technique/dotnet/interactive-notebook/yield-keyword/obj/Debug/net6.0/yield-keyword.csproj.AssemblyReference.cache
+/Users/hukar/Library/Mobile Documents/27N4MQEA55~pro~writer/Documents/notes-technique/dotnet/interactive-notebook/yield-keyword/obj/Debug/net6.0/yield-keyword.GeneratedMSBuildEditorConfig.editorconfig
+/Users/hukar/Library/Mobile Documents/27N4MQEA55~pro~writer/Documents/notes-technique/dotnet/interactive-notebook/yield-keyword/obj/Debug/net6.0/yield-keyword.AssemblyInfoInputs.cache
+/Users/hukar/Library/Mobile Documents/27N4MQEA55~pro~writer/Documents/notes-technique/dotnet/interactive-notebook/yield-keyword/obj/Debug/net6.0/yield-keyword.AssemblyInfo.cs
+/Users/hukar/Library/Mobile Documents/27N4MQEA55~pro~writer/Documents/notes-technique/dotnet/interactive-notebook/yield-keyword/obj/Debug/net6.0/yield-keyword.csproj.CoreCompileInputs.cache
+/Users/hukar/Library/Mobile Documents/27N4MQEA55~pro~writer/Documents/notes-technique/dotnet/interactive-notebook/yield-keyword/obj/Debug/net6.0/yield-keyword.dll
+/Users/hukar/Library/Mobile Documents/27N4MQEA55~pro~writer/Documents/notes-technique/dotnet/interactive-notebook/yield-keyword/obj/Debug/net6.0/ref/yield-keyword.dll
+/Users/hukar/Library/Mobile Documents/27N4MQEA55~pro~writer/Documents/notes-technique/dotnet/interactive-notebook/yield-keyword/obj/Debug/net6.0/yield-keyword.pdb
+/Users/hukar/Library/Mobile Documents/27N4MQEA55~pro~writer/Documents/notes-technique/dotnet/interactive-notebook/yield-keyword/obj/Debug/net6.0/yield-keyword.genruntimeconfig.cache

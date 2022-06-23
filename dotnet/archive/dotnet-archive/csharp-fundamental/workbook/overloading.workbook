@@ -1,0 +1,36 @@
+---
+uti: com.xamarin.workbook
+id: 39c9678c-c47b-43ca-ae44-c5d4a8a7c85f
+title: overloading
+platforms:
+- DotNetCore
+---
+
+```csharp
+class Robot
+{
+    public Robot(string name)
+    {
+        Name = name;
+    }
+
+    public Robot()
+    {
+        const int x = 8;
+        x += 5;
+    }    
+
+    readonly public string Name = "no-name-robot";
+    public const string CATEGORY = "civil-robot";
+}
+```
+
+```csharp
+Robot rbt = new Robot();
+Robot.CATEGORY;
+```
+
+```csharp
+Robot cpo = new Robot("cpo");
+cpo.Name;
+```

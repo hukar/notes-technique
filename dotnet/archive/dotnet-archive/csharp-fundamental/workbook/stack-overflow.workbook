@@ -1,0 +1,54 @@
+---
+uti: com.xamarin.workbook
+id: ba405de6-557a-4486-866c-077244e9d63e
+title: stack-overflow
+platforms:
+- DotNetCore
+---
+
+```csharp
+class Machine
+{
+    public Machine(int nb)
+    {
+        Count = 0;
+    }
+
+    public int Data
+    {
+        get
+        {
+            if (Count == 0)
+            {
+                return -1;
+            }
+            else
+            {
+                return Data;
+            }
+        }
+        set
+        {
+            Data = value;
+        }
+    }
+
+    public int Count;
+}
+```
+
+```csharp
+var machine = new Machine(5);
+```
+
+```csharp
+var a = machine.Data;
+```
+
+```csharp
+machine.Count = 9;
+```
+
+```csharp
+var b = machine.Data;
+```

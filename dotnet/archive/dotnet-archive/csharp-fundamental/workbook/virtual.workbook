@@ -1,0 +1,40 @@
+---
+uti: com.xamarin.workbook
+id: 4807e58c-c161-4b8b-a48a-69481a5e359d
+title: virtual
+platforms:
+- DotNetCore
+---
+
+```csharp
+class Animal
+{
+    public virtual void Running()
+    {
+        Console.WriteLine("I'm running\n");
+    }
+}
+
+class Cat : Animal
+{
+    public override void Running()
+    {
+        Console.WriteLine("Miamiaouw, I'm running ...\n");
+    } 
+}
+```
+
+```csharp
+Animal animal = new Animal();
+Cat chat = new Cat();
+Animal animalChat = new Cat();
+
+Console.WriteLine("animal :");
+animal.Running();
+
+Console.WriteLine("chat :");
+chat.Running();
+
+Console.WriteLine("animal chat :");
+animalChat.Running();
+```

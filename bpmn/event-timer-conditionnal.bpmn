@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_10amv0u" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="3.1.0">
+  <bpmn:collaboration id="Collaboration_1jt4zk2">
+    <bpmn:participant id="Participant_00t5od4" name="Chocolate Bakery" processRef="Process_0lhsfbd" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_0lhsfbd" isExecutable="true">
+    <bpmn:task id="Task_1v9673g" name="the dough for the bread">
+      <bpmn:incoming>SequenceFlow_1npl6ek</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0ilfhk9</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:startEvent id="StartEvent_1" name="Tue-Sun at 4am">
+      <bpmn:outgoing>SequenceFlow_1npl6ek</bpmn:outgoing>
+      <bpmn:timerEventDefinition />
+    </bpmn:startEvent>
+    <bpmn:intermediateCatchEvent id="EndEvent_13qlklp" name="25 min">
+      <bpmn:incoming>SequenceFlow_0ilfhk9</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0ds74mz</bpmn:outgoing>
+      <bpmn:timerEventDefinition />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:task id="Task_1l216de" name="Put the bread into the oven">
+      <bpmn:incoming>SequenceFlow_0ds74mz</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_131admf</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:intermediateCatchEvent id="IntermediateThrowEvent_0z18w70" name="the bread is brown">
+      <bpmn:incoming>SequenceFlow_131admf</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0h7366y</bpmn:outgoing>
+      <bpmn:conditionalEventDefinition>
+        <bpmn:condition xsi:type="bpmn:tFormalExpression" />
+      </bpmn:conditionalEventDefinition>
+    </bpmn:intermediateCatchEvent>
+    <bpmn:task id="Task_0lq1cod" name="Take the bread out of the oven">
+      <bpmn:incoming>SequenceFlow_0h7366y</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_11b4dmz</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="EndEvent_0pi2s9j" name="Bread is prepared">
+      <bpmn:incoming>SequenceFlow_11b4dmz</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1npl6ek" sourceRef="StartEvent_1" targetRef="Task_1v9673g" />
+    <bpmn:sequenceFlow id="SequenceFlow_0ilfhk9" sourceRef="Task_1v9673g" targetRef="EndEvent_13qlklp" />
+    <bpmn:sequenceFlow id="SequenceFlow_0ds74mz" sourceRef="EndEvent_13qlklp" targetRef="Task_1l216de" />
+    <bpmn:sequenceFlow id="SequenceFlow_131admf" sourceRef="Task_1l216de" targetRef="IntermediateThrowEvent_0z18w70" />
+    <bpmn:sequenceFlow id="SequenceFlow_0h7366y" sourceRef="IntermediateThrowEvent_0z18w70" targetRef="Task_0lq1cod" />
+    <bpmn:sequenceFlow id="SequenceFlow_11b4dmz" sourceRef="Task_0lq1cod" targetRef="EndEvent_0pi2s9j" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1jt4zk2">
+      <bpmndi:BPMNShape id="Participant_00t5od4_di" bpmnElement="Participant_00t5od4" isHorizontal="true">
+        <dc:Bounds x="133" y="95" width="1038" height="250" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_1v9673g_di" bpmnElement="Task_1v9673g">
+        <dc:Bounds x="313" y="169" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1npl6ek_di" bpmnElement="SequenceFlow_1npl6ek">
+        <di:waypoint x="239" y="209" />
+        <di:waypoint x="313" y="209" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0ilfhk9_di" bpmnElement="SequenceFlow_0ilfhk9">
+        <di:waypoint x="413" y="209" />
+        <di:waypoint x="487" y="209" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="StartEvent_1iynnri_di" bpmnElement="StartEvent_1">
+        <dc:Bounds x="203" y="191" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="182" y="234" width="79" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="IntermediateCatchEvent_1kzptui_di" bpmnElement="EndEvent_13qlklp">
+        <dc:Bounds x="487" y="191" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="488" y="234" width="34" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_1l216de_di" bpmnElement="Task_1l216de">
+        <dc:Bounds x="597" y="169" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0ds74mz_di" bpmnElement="SequenceFlow_0ds74mz">
+        <di:waypoint x="523" y="209" />
+        <di:waypoint x="597" y="209" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_131admf_di" bpmnElement="SequenceFlow_131admf">
+        <di:waypoint x="697" y="209" />
+        <di:waypoint x="771" y="209" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="IntermediateCatchEvent_1feg4w6_di" bpmnElement="IntermediateThrowEvent_0z18w70">
+        <dc:Bounds x="771" y="191" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="760" y="234" width="58" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_0lq1cod_di" bpmnElement="Task_0lq1cod">
+        <dc:Bounds x="881" y="169" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0h7366y_di" bpmnElement="SequenceFlow_0h7366y">
+        <di:waypoint x="807" y="209" />
+        <di:waypoint x="881" y="209" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EndEvent_0pi2s9j_di" bpmnElement="EndEvent_0pi2s9j">
+        <dc:Bounds x="1055" y="191" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1029" y="234" width="88" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_11b4dmz_di" bpmnElement="SequenceFlow_11b4dmz">
+        <di:waypoint x="981" y="209" />
+        <di:waypoint x="1055" y="209" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

@@ -1,0 +1,39 @@
+---
+uti: com.xamarin.workbook
+id: 36dd75b2-bfca-4c83-8577-ed069526e271
+title: my-delegate
+platforms:
+- DotNetCore
+---
+
+```csharp
+delegate int ComputeDelegate(int a, int b);
+
+int Add(int a, int b) 
+{
+    Console.WriteLine($"{a + b}");
+    return a + b;
+}
+
+int Substract(int a, int b)
+{
+    Console.WriteLine($"{a - b}");
+    return a-b;
+}
+
+int Multiply(int a, int b)
+{
+    Console.WriteLine($"{a * b}");
+    return a * b;
+}
+
+
+ComputeDelegate MyCalculator = Add;
+MyCalculator += Substract;
+MyCalculator += Multiply;
+
+var result = MyCalculator(9, 2);
+Console.WriteLine(result);
+
+
+```

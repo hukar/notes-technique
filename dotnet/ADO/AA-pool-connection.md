@@ -141,10 +141,99 @@ Il faut utiliser `using` qui appelle `Dispose` ou `DisposeAsync` qui lui-même a
 >   So it works this way **1.** `con.Open() con.Close();` **2** `con.Open(); // reuse` **3.** `con.Dispose(); // use one time con.Open(); // error` 
 >
 >   – [Shaiju T](https://stackoverflow.com/users/2218697/shaiju-t)
+>   
+>   ```cs
+>   app.MapGet("/testclose", (IConfiguration configuration) => {
+>       List<string> connIds = new();
+>   
+>       var cnnString = configuration.GetConnectionString("HukarConnect");
+>       SqlConnection connection = new(cnnString);
+>   
+>       connection.Open();
+>       connIds.Add(connection.ClientConnectionId.ToString());
+>       connection.Close();
+>   
+>       connection.Open();
+>       connIds.Add(connection.ClientConnectionId.ToString());
+>       connection.Close();
+>   
+>       return Ok(connIds);
+>   });
+>   ```
+>   
+>   Fonctionne parfaitement.
+>   
+>   ```cs
+>   app.MapGet("/testclose", (IConfiguration configuration) => {
+>       List<string> connIds = new();
+>   
+>       var cnnString = configuration.GetConnectionString("HukarConnect");
+>       SqlConnection connection = new(cnnString);
+>   
+>       connection.Open();
+>       connIds.Add(connection.ClientConnectionId.ToString());
+>       connection.Dispose();
+>   
+>       connection.Open();
+>       connIds.Add(connection.ClientConnectionId.ToString());
+>       connection.Close();
+>   
+>       return Ok(connIds);
+>   });
+>   ```
+>   
+>   ```
+>   System.InvalidOperationException: The ConnectionString property has not been initialized.
+>   ```
+>   
+>   Une connection `Dispose` ne peut plus être réouverte avec `Open`.
 
 
 
+## Test avec `Dependency Injection`
 
+Si on transforme `SQlConnection` en service grâce à `builder.Services.AddScoped`, la connection est `Dispose` pour nous :
 
+`Program.cs`
 
+```cs
+string connString = builder.Configuration.GetConnectionString("HukarConnect");
+builder.Services.AddScoped(_ => new SqlConnection(connString));
+```
+
+On remarque la syntaxe spéciale `_ => new SqlConnection`. On peut ainsi passer le `connection string`.
+
+Puis plus loin :
+
+```cs
+app.MapGet("/connect", (SqlConnection connection) => {
+    connection.Open();
+    return Ok(connection.ClientConnectionId);
+});
+```
+
+Malfré le `pool` restreint (à `3` connections), je n'ai plus d'erreur en solicitant plusieurs fois mon `EndPoint`.
+
+Le `Conteneur de dépendances` utilise lui-même un `block using`.
+
+> ## Inspiré du `github` de Damian Edwards :
+>
+> https://github.com/DamianEdwards/MinimalApiPlayground/blob/main/src/Todo.Dapper/Program.cs
+>
+> Exemple utilisant `Dapper`
+>
+> ```cs
+> using Dapper;
+> // ...
+> 
+> var connectionString = builder.Configuration.GetConnectionString("TodoDb") ?? "Data Source=todos.db;Cache=Shared";
+> builder.Services.AddScoped(_ => new SqliteConnection(connectionString));
+> // ...
+> 
+> app.MapGet("/todos", async (SqliteConnection db) =>
+>     await db.QueryAsync<Todo>("SELECT * FROM Todos"))
+>    .WithName("GetAllTodos");
+> ```
+>
+> 
 

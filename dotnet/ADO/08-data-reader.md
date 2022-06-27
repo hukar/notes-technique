@@ -43,6 +43,12 @@ Si le `reader` n'est pas fermé, la `connection`  reste bloqué sur ce `reader`.
 
 ## `Cast` des données en entrée
 
+On a besoin de `GetOrdinal`  car les autres méthodes de cast attendent l'index de position et pas le nom de colonne.
+
+Par soucis de performance il est préférable de retrouver ses index en dehors de la boucle `while`.
+
+On peut aussi tester si une valeur (colonne) est `null` avec son index passé à la méthode `IsDBNull`.
+
 <img src="assets/cast-type-returned-pcj.png" alt="cast-type-returned-pcj" style="zoom:50%;" />
 
 
@@ -97,3 +103,52 @@ C'est plus rapide et moins lisible, cela utilise uniquement l'index de l'emplace
 Column1 = reader.GetValue(0).ToString().Trim();
 ```
 
+
+
+## exemple complet d'un `Endpoint`
+
+```cs
+public static IResult DiConnection(HuConnection connection)
+{
+    List<Product> products = new();
+
+
+    var sql = "SELECT * FROM Product";
+
+    var cmd = new SqlCommand(sql, connection.Connection);
+    connection.Connection.Open();
+
+    var reader = cmd.ExecuteReader();
+
+    var indexId = reader.GetOrdinal("Id");
+    var indexName = reader.GetOrdinal("Name");
+    var indexPrice = reader.GetOrdinal("Price");
+    var indexIntroductionDate = reader.GetOrdinal("IntroductionDate");
+    var indexRetireDate = reader.GetOrdinal("RetireDate");
+
+    while(reader.Read())
+    {
+        products.Add(new Product {
+            Id = reader.GetInt32(indexId),
+            Name = reader.GetString(indexName),
+            Price = reader.IsDBNull(indexPrice) ? null : reader.GetDecimal(indexPrice),
+            IntroductionDate = reader.IsDBNull(indexIntroductionDate) ? null : reader.GetDateTime(indexIntroductionDate),
+            RetireDate = reader.IsDBNull(indexRetireDate) ? null : reader.GetDateTime(indexRetireDate),
+        });
+    }
+
+    return Ok(products);
+}
+```
+
+Les `index` sont récupérés en dehors de la boucle `while`.
+
+Les `null` sont traités grâce à la méthode `IsDBNull` du `SqlDataReader`.
+
+La `connection` est envoyée par `DI`, pas besoin de `using`.
+
+Par contre (même si je ne vois pas de cond-séquence), il faudrait certainement un `using` devant la `commande` et devant le `reader`.
+
+> Si on regarde plusieurs sources, utiliser `SqlCommand` améliore les performances en évitant l'attente du `GC` : `Garbage Collector`.
+>
+> Il faut se dire que `SqlCommand` et `SqlDataReader` utilise des ressource non managées directement par mon code. Pour les libérés, ils peuvent invoquer `Dispose`.

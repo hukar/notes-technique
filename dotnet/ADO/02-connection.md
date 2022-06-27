@@ -72,7 +72,7 @@ public class Connection
 
         cnn.Close();
 
-        cnn.Dispose();
+        cnn.Dispose(); // call Close
         
         return resultText;
     }

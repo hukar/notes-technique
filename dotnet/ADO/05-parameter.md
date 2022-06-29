@@ -60,7 +60,8 @@ La valeur sera en réalité passée par une variable reçu de l'utilisateur.
 
 ```cs
 IResult ExecuteNonQuery() {
-    var sql = @"INSERT INTO Product (Name, Price) VALUES (@ProductName, @ProductPrice)";
+    var sql = @"INSERT INTO Product (Name, Price) 
+    			 VALUES (@ProductName, @ProductPrice)";
 
     try {
         using var cnn = new SqlConnection(cnnString);

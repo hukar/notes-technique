@@ -41,3 +41,17 @@ ALTER TABLE Product
 ALTER COLUMN Price decimal
 ```
 
+
+
+## Modifier la valeur par défaut d'une colonne
+
+```sql
+ALTER TABLE Product ADD CONSTRAINT DF_IsDeletedDefault DEFAULT 1 FOR IsDeleted
+```
+
+Sans utiliser de contrainte :
+
+```sql
+ALTER TABLE Product ADD DEFAULT 1 FOR IsDeleted
+```
+

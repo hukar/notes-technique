@@ -147,8 +147,12 @@ Les `null` sont traités grâce à la méthode `IsDBNull` du `SqlDataReader`.
 
 La `connection` est envoyée par `DI`, pas besoin de `using`.
 
-Par contre (même si je ne vois pas de cond-séquence), il faudrait certainement un `using` devant la `commande` et devant le `reader`.
+Par contre (même si je ne vois pas de conséquence), il faudrait certainement un `using` devant la `commande` et devant le `reader`.
 
-> Si on regarde plusieurs sources, utiliser `SqlCommand` améliore les performances en évitant l'attente du `GC` : `Garbage Collector`.
+> Si on regarde plusieurs sources, utiliser `using` avec  `SqlCommand` améliore les performances en évitant l'attente du `GC` : `Garbage Collector`.
 >
 > Il faut se dire que `SqlCommand` et `SqlDataReader` utilise des ressource non managées directement par mon code. Pour les libérés, ils peuvent invoquer `Dispose`.
+
+> ## Règle :
+>
+> Toujours utiliser `using` avec des classes implémentant `IDisposable`.

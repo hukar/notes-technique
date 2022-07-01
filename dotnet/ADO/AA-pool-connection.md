@@ -16,8 +16,8 @@ On peut ainsi réduire le `Pool` dans sa `connection string` pour des raisons de
 
 ```json
 "ConnectionStrings": {
-    "HukarConnection":"Server=localhost,1433;Database=AdoTest;User=sa;Password=huk@r2Xmen99;Encrypt=false;Max Pool Size=3"
-  },
+    "HukarConnection": "Server=localhost,1433;Database=AdoTest;User=sa;Password=huk@r2Xmen99;Encrypt=false;Max Pool Size=3"
+},
 ```
 
 
@@ -145,18 +145,18 @@ Il faut utiliser `using` qui appelle `Dispose` ou `DisposeAsync` qui lui-même a
 >   ```cs
 >   app.MapGet("/testclose", (IConfiguration configuration) => {
 >       List<string> connIds = new();
->     
+>       
 >       var cnnString = configuration.GetConnectionString("HukarConnect");
 >       SqlConnection connection = new(cnnString);
->     
+>       
 >       connection.Open();
 >       connIds.Add(connection.ClientConnectionId.ToString());
 >       connection.Close();
->     
+>       
 >       connection.Open();
 >       connIds.Add(connection.ClientConnectionId.ToString());
 >       connection.Close();
->     
+>       
 >       return Ok(connIds);
 >   });
 >   ```
@@ -166,18 +166,18 @@ Il faut utiliser `using` qui appelle `Dispose` ou `DisposeAsync` qui lui-même a
 >   ```cs
 >   app.MapGet("/testclose", (IConfiguration configuration) => {
 >       List<string> connIds = new();
->     
+>       
 >       var cnnString = configuration.GetConnectionString("HukarConnect");
 >       SqlConnection connection = new(cnnString);
->     
+>       
 >       connection.Open();
 >       connIds.Add(connection.ClientConnectionId.ToString());
 >       connection.Dispose();
->     
+>       
 >       connection.Open();
 >       connIds.Add(connection.ClientConnectionId.ToString());
 >       connection.Close();
->     
+>       
 >       return Ok(connIds);
 >   });
 >   ```

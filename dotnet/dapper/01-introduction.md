@@ -44,5 +44,19 @@ On a un total contrôle sur le `SQL`, pas de configuration compliquée, la courb
 ### `Entity Framework`
 
 ```cs
+var contacts = context.Contacts.Where(c => c.Id == id)
+    							 .Select(c => new { FirstName = c.FirstName,
+                                                  LastName = c.LastName });
+```
+
+
+
+### `Dapper`
+
+```cs
+var contacts = connection.Query<Contact>(
+	"SELECT Id, FirtsName, LastName FROM Contacts WHERE Id = @Id",
+    new { id }
+);
 ```
 

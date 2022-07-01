@@ -55,3 +55,34 @@ Sans utiliser de contrainte :
 ALTER TABLE Product ADD DEFAULT 1 FOR IsDeleted
 ```
 
+
+
+## Créer une `Foreign Key`
+
+On crée d'abord la colonne :
+
+```sql
+ALTER TABLE Product
+ADD CategoryId int;
+GO
+```
+
+Puis on ajoute une contrainte :
+
+```sql
+ALTER TABLE Product
+ADD CONSTRIANT FK_Product_Category FOREIGN KEY CategoryId
+REFERENCES Catgory (Id)
+[ON DELETE CASCADE]
+[ON UPDATE CASCADE]
+```
+
+### Créer une colonne qui est une `FOREIGN KEY`
+
+```sql
+ALTER TABLE Product
+ADD CategoryId INT
+CONSTRAINT FK_Product_Category FOREIGN KEY (CategoryId)
+REFERENCES Category (Id)
+```
+

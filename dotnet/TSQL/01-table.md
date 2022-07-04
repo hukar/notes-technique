@@ -72,6 +72,15 @@ ALTER COLUMN Price decimal
 
 
 
+## Supprimer une colonne
+
+```sql
+ALTER TABLE Contacts
+DROP COLUMN IsNew
+```
+
+
+
 ## Modifier la valeur par défaut d'une colonne
 
 ```sql

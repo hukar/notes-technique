@@ -39,6 +39,14 @@ EXEC sp_rename 'ancienNom', 'nouveauNom'
 
 attention à la virgule.
 
+Ou juste
+
+```sql
+sp_rename 'ancienNom', 'nouveauNom'
+```
+
+
+
 
 
 ## Ajouter une colonne
@@ -71,6 +79,20 @@ ALTER COLUMN Price decimal
 ```
 
 
+
+## Renomer une colonne
+
+```sql
+EXEC sp_RENAME 'table_name.old_name', 'new_name', 'COLUMN'
+```
+
+Exemple :
+
+```sql
+sp_rename 'Orders.Orders.OredrIsExpedited', 'OrderIsExpedited', 'COLUMN'
+```
+
+Ici le nom du `Schema` `Orders` était obligatoire.
 
 ## Supprimer une colonne
 

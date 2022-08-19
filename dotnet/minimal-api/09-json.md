@@ -32,14 +32,16 @@ On crée l'alias `HttpJson` car sinon il y a un ambiguïté de référence pour 
 > 
 > // ...
 > builder.Services.Configure<HttpJson.JsonOptions>(
->     options => options.SerializerOptions.ReferenceHandler = ReferenceHandler.Preserve
+>  options => options.SerializerOptions.ReferenceHandler = ReferenceHandler.Preserve
 > );
 > ```
 >
 > ou
 >
 > ```cs
-> options => options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles
+> builder.Services.Configure<HttpJson.JsonOptions>(
+>     options => options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles
+> );
 > ```
 >
 > `IgnoreCycles` ajoute des `null` pour fermer les `Références`.

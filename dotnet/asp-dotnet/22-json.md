@@ -90,7 +90,7 @@ Dans ce cas on utilise une `option` du `JsonSerializer` utilisé :
 
 ```cs
 builder.Services.AddControllersWithViews().AddJsonOptions(options =>
-	options.JsonSerializerOptions.ReferenceHandler =                                                    		ReferenceHandler.IgnoreCycles;
+	options.JsonSerializerOptions.ReferenceHandler =                                                    		ReferenceHandler.IgnoreCycles
 );
 ```
 

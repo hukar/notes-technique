@@ -28,10 +28,10 @@ On crée l'alias `HttpJson` car sinon il y a un ambiguïté de référence pour 
 >
 > ```cs
 > using System.Text.Json.Serialization;
-> using Microsoft.AspNetCore.Http.Json;
+> using HttpJson = Microsoft.AspNetCore.Http.Json;
 > 
 > // ...
-> builder.Services.Configure<JsonOptions>(
+> builder.Services.Configure<HttpJson.JsonOptions>(
 >     options => options.SerializerOptions.ReferenceHandler = ReferenceHandler.Preserve
 > );
 > ```

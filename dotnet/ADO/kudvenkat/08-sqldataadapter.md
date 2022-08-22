@@ -44,5 +44,17 @@ List<ProductDto> GetProductsDataAdapter(SqlConnection con)
 
 Un `DataSet` est une représentation en mémoire de la base de données, tables et relations.
 
-La méthode `Fill` ouvre la connexion, exécute la commande, rempli le `DataSet` et ferme la connexion pour nous.
+La méthode `Fill` ouvre la connexion, exécute la commande, rempli une `DataTable` du  `DataSet` et ferme la connexion pour nous.
+
+
+
+## Avec une `procédure stockée`
+
+```sql
+CREATE PROCEDURE spGetProductInventory
+AS
+BEGIN
+	SELECT * FROM ProductInventory
+END
+```
 

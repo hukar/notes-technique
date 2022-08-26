@@ -57,7 +57,7 @@ L'objet `exception` contient toutes les infos.
 
 ## Problèmes de cette méthode
 
-- On perd les infos importantes venat de `SQL Server`
+- On perd les infos importantes venant de `SQL Server`
 - On n'a plus accès à l'objet `Command`.
 
 

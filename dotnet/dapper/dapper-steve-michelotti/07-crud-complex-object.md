@@ -103,7 +103,7 @@ public void Save(Contact contact)
         Update(contact)
     }
     
-    foreach(var adress in contact.Addresses.Where(a = !a.IsDeleted))
+    foreach(var adress in contact.Addresses.Where(a => !a.IsDeleted))
     {
         address.ContactId = contact.Id;
         
@@ -159,6 +159,8 @@ Permet d'effacer une `address` dans l'interface graphique (`UI`) et que cette `a
 
 ## Utiliser une `transaction`
 
+Pour être sûr que toutes les opérations réussissent ou échouent ensemble, on **doit** utiliser une `trasaction`.
+
 On va utiliser `TransactionScope` :
 
 ```cs
@@ -174,9 +176,11 @@ public void Save(Contact contact)
 }
 ```
 
+Si une des requête génère une erreur, toutes les requêtes sont annulées.
 
+Ceci fonctionne avec `Microsoft.Data.SqlClient`.
 
-
+Des anciennes versions de `System.Data.SqlClient` peuvent générer des bugs (lancer des exceptions).
 
 
 

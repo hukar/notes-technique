@@ -41,7 +41,7 @@ le `"fname"` revient `null` de la `DB`
 Modifions la requête du `repository` :
 
 ```cs
-var sql = "SELECT FirstName FBame,* FROM Contacts";
+var sql = "SELECT FirstName FName,* FROM Contacts";
 
 return _db.Query<Contact>(sql).ToList();
 ```

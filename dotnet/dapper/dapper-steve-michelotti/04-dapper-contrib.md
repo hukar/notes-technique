@@ -21,8 +21,8 @@ Une version`Async` existe pour chaque `méthode` :
 ```cs
 T Get<T>(id);
 IEnumerable<T> GetAll<T>();
-int Insert<T>(T obj);
-int Insert<T>(Enumerable<T> list);
+int Insert<T>(T obj);  // return Id
+int Insert<T>(Enumerable<T> list); // return rowsAffected
 bool Update<T>(T obj);
 bool Update<T>(Enumerable<T> list);
 bool Delete<T>(T obj);
@@ -77,6 +77,8 @@ public class ContactContribRepository : IContactRepository
 
     public int Delete(int id)
     {
+        // Delete de Dapper.Contrib reçoit un contact en paramètre
+        // Il suffit de créer un contact vode avec l'Id désiré
         var isDeleted = _db.Delete<Contact>(new Contact { Id = id });
 
         return Convert.ToInt32(isDeleted);
@@ -84,7 +86,7 @@ public class ContactContribRepository : IContactRepository
 }
 ```
 
-
+`Insert` retourne l'`Id` de l'enregistrement ou le nombre de ligne ajouté si on lui passe une liste.
 
 ## Erreur obtenu
 

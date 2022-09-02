@@ -95,3 +95,85 @@ DataTable dtCopy = dt.Copy();
 
 ## Utiliser `Select` pour filtrer notre `DataTable`
 
+`Select` va filtrer les `Rows` et créer un tableau (`array`) de `DataRow`.
+
+`Select` va itérer chaque `row`.
+
+On va créer une nouvelle `DataTable` avec `ImportRow()` et appeler `AcceptChanges` quand tout est bon.
+
+```cs
+DataTable dt = productManager.GetProductAsDataTable();
+
+DataTable dtNew = dt.Clone();
+
+DataRow[] rows = dt.Select("Price < 100");
+
+foreach(DataRow row in rowe)
+{
+    // dtNew.Rows.Add(row); => error
+    
+    // dtNews.Rows.Add(row.ItemArray); => Ok
+    
+    dtNew.ImportRow(row);
+}
+
+dtNew.AcceptChanges(); // pas nécessaire pour moi
+
+return dtNew;
+```
+
+erreur avec `dtNew.Rows.Add(row)` :
+
+<img src="assets/dtatrow-error-adding-sst.png" alt="dtatrow-error-adding-sst" style="zoom:50%;" />
+
+#### Cette ligne appartient déjà à une autre table
+
+`row.ItemArray` retourne un tableau avec les valeurs du `DataRow`.
+
+
+
+## `CopyToDataTable`
+
+On peut simplifier la syntaxe ci-dessus avec la méthode `CopyToDataTable` :
+
+```cs
+public static List<ProductDto> SelectDataTable(ProductManager mgr)
+{
+    DataTable dt = mgr.GetProductsAsDataTable();
+
+    DataTable dtNew = dt.Select("Price < 200").CopyToDataTable();
+
+    return TableToListTwo(dtNew);
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

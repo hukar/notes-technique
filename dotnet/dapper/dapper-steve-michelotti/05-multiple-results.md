@@ -8,7 +8,7 @@
 
 
 
-## Création de la méthode `GetFullContact` dans le `Repository`
+## Création de la méthode `GetFullContact` dans le `Repository` : `QueryMultiple` et `Read<T>`
 
 `ContactRepository.cs`
 
@@ -18,7 +18,7 @@ public Contact GetFullContact(int id)
     var sql = @"SELECT * FROM Contacts WHERE Id = @Id;
     			 SELECT * FROM Addresses WHERE ContactId = @Id";
     
-    using var multipleResults = _db.QueryMultiple(sql, new { id });
+    using GridReader multipleResults = _db.QueryMultiple(sql, new { id });
     
     var contact = multipleResults.Read<Contact>().SingleOrDefault();
     
@@ -40,5 +40,11 @@ app.MapGet("/contactfull/{id:int}", GetContactFullById);
 
 IResult GetContactFullById(int id, IContactRepository repo) 
     => repo.GetFullContact(id) is Contact contact ? Ok(contact) : NotFound();
+```
+
+On utilise `using` car `GridReader` implémente `Idisposable` :
+
+```cs
+public class GridReader : IDisposable
 ```
 

@@ -58,7 +58,7 @@ On peut définir la précision en nanoseconde.
 
 Du 01 janvier 0001 au 31 décembre 9999.
 
-Taille : de 6 à 8 bytes
+Taille : de `6` à `8 bytes`
 
 Plus léger que `datetime` et avec une plus grosse plage de valeurs.
 
@@ -221,6 +221,76 @@ SELECT datediff(MONTH, @mydate, getdate()), datediff(DAY, @mydate, getdate())
 ```
 
 <img src="assets/datediff-between-two-dates-fgq.png" alt="datediff-between-two-dates-fgq" style="zoom:33%;" />
+
+
+
+## `Date Offset`
+
+<img src="assets/time-offset-lsp.png" alt="time-offset-lsp" style="zoom:50%;" />
+
+On voit que l'`offset` est `(UTC+2)`.
+
+`Universal Time Coordinated` = temps universel.
+
+On a donc `+2` heures sur le temps universelle
+
+`datetimeoffset` permet de spécifier la `time zone`.
+
+`datetimeoffset` est une variante de `datetime2` avec la même précision.
+
+```sql
+DECLARE @myDateOffset as datetimeoffset = '2015-10-04 01:12:45.895 +05:30'
+DECLARE @myDate as datetime2 = '2015-10-04 01:12:45.895'
+
+SELECT @myDateOffset WithOffset, @myDate WithoutOffset
+```
+
+`datetimeoffset` prend deux `bytes` en plus que `datetime2`, il requière donc entre `8` et `10 bytes`.
+
+`datetimeoffset(2)` => `8 bytes`.
+
+
+
+### `TODATETIMEOFFSET`
+
+Transforme un `datetime2` en `datetimeoffset`.
+
+```sql
+SELECT TODATETIMEOFFSET(SYSDATETIME(),'+02:00') WithOffset, SYSDATETIME() WithoutOffset
+```
+
+<img src="assets/to-datetimeoffset-test-jjg.png" alt="to-datetimeoffset-test-jjg" style="zoom:50%;" />
+
+Cela ne modifie pas l'heure, ça ajoute seulement le `timezone`.
+
+
+
+### `datetimeoffsetfromparts`
+
+Fonctionne comme `datetime2fromparts` en ajoutant le nombre d'heures et de minutes avant la précision :
+
+```sql
+SELECT datetime2fromparts     (2019,11,23,15,56,33,4528      ,4)
+SELECT DATETIMEOFFSETFROMPARTS(2019,11,23,15,56,33,4528,02,30,4)
+```
+
+<img src="assets/datetimeparts-with-offset-aar.png" alt="datetimeparts-with-offset-aar" style="zoom: 33%;" />
+
+
+
+### `switchoffset`
+
+permet de changer de `timezone`.
+
+```sql
+SELECT SWITCHOFFSET(SYSDATETIME(), '+02:00')
+```
+
+<img src="assets/swith-timezone-rrf.png" alt="swith-timezone-rrf" style="zoom:33%;" />
+
+Ici on a l'heure de Belgique avec le `timezone` indiqué.
+
+
 
 
 

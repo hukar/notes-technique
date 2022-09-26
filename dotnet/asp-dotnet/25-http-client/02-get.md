@@ -28,15 +28,41 @@ public class CRUDService : IIntegrationService
 }
 ```
 
+On devrait écrire l'instanciation de `HttpClient` avec un `using` :
+
+```cs
+using var _httpClient = new HttpClient;
+```
+
+car `HttpClient` implémente `IDisposable`, mais il ne faut pas faire comme cela (voire dans les prochaines fiches avec `HttpClientFactory`).
+
+On peut garder à l'esprit que `HttpClient` doit vivre longtemps, c'est pour ça qu'il n'est pas nécessaire de le `Dispose` et qu'on le stocke dans un champ `private` et `static`.
+
+Par contre on pourrait écrire :
+
+```cs
+using HttpResponseMessage response = await _httpClient.GetAsync("...");
+```
+
+car `HttpResponseMessage` implémente `IDisposable`.
+
+
+
 ### `EnsureSuccessStatusCode` 
 
 Lance une exception si la propriété de la réponse `HTTP` `IsSuccessStatusCode` est `false`.
 
-On veut que l'instance de `HttpClient` vive le plus longtemps possible, on n'utilise pas `using` pour ne pas déclencher `Dispose`.
+`response.Content` est du type `HttpContent` et permet de lire :
+
+- un `string` => `ReadAsStringAsync`
+- un `stream` => `ReadAsStreamAsync`
+- un `Byte array` => `ReadAsByteArrayAsync`
 
 
 
 ### Déserialisation du `json` : `JsonSerializer.Deserialize`
+
+Vient du package `System.Text.Json`.
 
 ```cs
 var movies = JsonSerializer.Deserialize<IEnumerable<Movie>>(content);

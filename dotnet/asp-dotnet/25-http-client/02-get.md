@@ -46,7 +46,11 @@ using HttpResponseMessage response = await _httpClient.GetAsync("...");
 
 car `HttpResponseMessage` implémente `IDisposable`.
 
-
+> Dans la doc microsoft https://learn.microsoft.com/en-us/dotnet/fundamentals/networking/http/httpclient la déclaration `using` est utilisée :
+>
+> ```cs
+> using HttpResponseMessage response = await client.GetAsync("todos/3");
+> ```
 
 ### `EnsureSuccessStatusCode` 
 
@@ -108,6 +112,12 @@ La responsabilité du type de données acceptées incombe au `client`.
 
 La négotiation se fait grâce aux `headers`, des couples clé/valeur(s) contenus dans le `header` de la requête `HTTP`.
 
+`name: value`
+
+`name: value1, value2, value3`
+
+Le `name` n'est pas sensible à la case.
+
 ```
 Accept: application/json
 Accept: application/json, text/html
@@ -127,9 +137,11 @@ Les `headers` sont facultatifs, mais systématiquement préciser `Accept` augmen
 
 ### Négotiation du contenu : Content Negotiation
 
+Le mécanisme utilisé pour envoyer différentes représentations d'une ressource avec la même adresse (`URI`).
+
 <img src="assets/content-negotiation-with-headers-json-xml.png" alt="content-negotiation-with-headers-json-xml" style="zoom:50%;" />
 
-En précisant à l'`API` qu'elle type de contenu on désire, celle-ci peut répondre de manière plus personnalisée.
+En précisant à l'`API` qu'elle type de contenu on désire, quel type de représentation du contenu (`XML` ou `JSON`), celle-ci peut répondre de manière plus personnalisée.
 
 <img src="assets/xml-return-with-content-negotiation.png" alt="xml-return-with-content-negotiation" style="zoom:50%;" />
 
@@ -210,11 +222,15 @@ _httpClient.DefaultRequestHeaders.Accept.Add(
 );
 ```
 
+##### `MediaTypeWithQualityHeaderValue(string mediaType, double quality)`
+
 
 
 ## `HttpRequestMessage` et `SendAsync`
 
 Créer tous les réglages directement sur l'instance de `HttpClient` est intérêssant seulement si toutes les requêtes nécessitent ces mêmes réglages.
+
+Un `header` est plutôt une propriété de la requête que du client.
 
 On peut vouloir fixer les valeurs de `header` sur seulement une `requête` plutôt que sur le `client`.
 
@@ -239,6 +255,20 @@ public async Task GetResourceThroughHttpRequestMessage()
 C'est dans le `httpRequestMessage` qu'on va définir le `Verb` , l'`URI`et les `Headers`.
 
 Ensuite on passe la `request` à la méthode `SendAsync` de `_httpClient`.
+
+> ## `Dispose` or not `Dispose`
+>
+> Il y a un débat pour savoir si  `HttpRequestMessage` et `HttpResponseMessage` doivent être `Disposés`, on peut écrire le code plus haut comme ceci :
+>
+> ```cs
+> using HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "api/movies");
+> request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+> 
+> using HttpResponseMessage response = await _httpClient.SendAsync(request);
+> response.EnsureSuccessStatusCode();
+> ```
+>
+> à tester ...
 
 
 

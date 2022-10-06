@@ -203,8 +203,10 @@ Va donner une version littéral si elle existe (ici pour `WEEKDAY` et `MONTH`).
 ## `datepart`
 
 ```sql
-SELECT datepart(HOUR, SYSDATETIME())
+SELECT datepart(HOUR, SYSDATETIME()) as Hour, SYSDATETIME() as N'Date now'
 ```
+
+<img src="assets/date-part-hour-sysdatetime.png" alt="date-part-hour-sysdatetime" style="zoom:50%;" />
 
 > Il n'y a pas de fonction `HOUR(@date)` comme `YEAR(@date)` ou `DAY(@date)`
 
@@ -224,7 +226,19 @@ SELECT datediff(MONTH, @mydate, getdate()), datediff(DAY, @mydate, getdate())
 
 
 
-## `Date Offset`
+## `Datetimeoffset`
+
+D'après la documentation microsoft, c'est le type par défaut si on veut un type `date`.
+
+>https://learn.microsoft.com/en-us/dotnet/standard/datetime/choosing-between-datetime
+>
+>These uses for `DateTimeOffset` values are much more common than those for `DateTime` values. As a result, consider `DateTimeOffset` as the default date and time type for application development.
+>
+>
+>
+>Ces utilisations des valeurs `DateTimeOffset` sont beaucoup plus courantes que celles des valeurs `DateTime`. Par conséquent, considérez `DateTimeOffset` comme le type de date et d'heure par défaut pour le développement d'applications.
+
+
 
 <img src="assets/time-offset-lsp.png" alt="time-offset-lsp" style="zoom:50%;" />
 
@@ -270,7 +284,7 @@ Cela ne modifie pas l'heure, ça ajoute seulement le `timezone`.
 Fonctionne comme `datetime2fromparts` en ajoutant le nombre d'heures et de minutes avant la précision :
 
 ```sql
-SELECT datetime2fromparts     (2019,11,23,15,56,33,4528      ,4)
+SELECT DATETIME2FROMPARTS     (2019,11,23,15,56,33,4528      ,4)
 SELECT DATETIMEOFFSETFROMPARTS(2019,11,23,15,56,33,4528,02,30,4)
 ```
 
@@ -292,7 +306,144 @@ Ici on a l'heure de Belgique avec le `timezone` indiqué.
 
 
 
+## Conversion avec les `Dates`
 
 
 
+### Conversion d'un `string` vers une `datetime`
+
+```sql
+DECLARE @mydate as datetime = '2022-10-04 14:50:20'
+SELECT @mydate
+```
+
+<img src="assets/convert-string-to-date.png" alt="convert-string-to-date" style="zoom:50%;" />
+
+
+
+### Conversion d'une `date` en `string`
+
+```sql
+DECLARE @mydate as datetime = '2022-10-04 14:50:20'
+SELECT 'The date and time is: ' + @mydate
+```
+
+<img src="assets/conversion-time-to-string-failed.png" alt="conversion-time-to-string-failed" style="zoom:50%;" />
+
+Il faut utiliser `convert` ou `cast` :
+
+```sql
+SELECT 'The date and time is: ' + convert(nvarchar(20), @mydate)
+SELECT 'The date and time is: ' + cast(@mydate as nvarchar(20))
+```
+
+<img src="assets/convert-and-cast-2-date.png" alt="convert-and-cast-2-date" style="zoom:50%;" />
+
+
+
+### Transformer un `string` complexe en `date` : `parse`
+
+`parse` tente de transformer un `string` en une `date` valide :
+
+```sql
+SELECT convert(date, 'Thursday, 25 june 2015') AS ConvertedDate
+```
+
+<img src="assets/conmplex-string-conversion-to-date-failed.png" alt="conmplex-string-conversion-to-date-failed" style="zoom:50%;" />
+
+
+```sql
+SELECT parse(date, 'Thursday, 25 june 2015') AS ParsedDate
+```
+
+<img src="assets/conversion-complexe-string-ok.png" alt="conversion-complexe-string-ok" style="zoom:50%;" />
+
+Attention la date doit être correcte sinon :
+
+<img src="assets/wrong-date-failed-conversion.png" alt="wrong-date-failed-conversion" style="zoom:50%;" />
+
+
+```sql
+SELECT parse(date, 'Jeudi, 25 juin 2015') AS FrenchParsedDate
+```
+
+<img src="assets/using-good-culture.png" alt="using-good-culture" style="zoom:50%;" />
+
+Le message d'erreur nous dit qu'il faut régler la culture (la langue) :
+
+```sql
+SELECT parse(date, 'Jeudi, 25 juin 2015' using 'fr-FR') AS FrenchParsedDate
+```
+
+<img src="assets/the-conversion-work-in-french-culture.png" alt="the-conversion-work-in-french-culture" style="zoom:50%;" />
+
+Maintenant cela fonctionne.
+
+
+
+### La fonction `format`
+
+```sql
+FORMAT( value, format [, culture ] ) 
+```
+
+
+
+La fonction `format` donne beaucoup de flexibilité pour convertir une `date` en `string`
+
+```sql
+SELECT format(cast('2015-06-25 01:02:03.456' as datetime), 'D') as N'my formated long date'
+SELECT format(cast('2015-06-25 01:02:03.456' as datetime), 'd') as N'my formated short date'
+SELECT format(cast('2015-06-25 01:02:03.456' as datetime), 'dd-MM-yyyy') as N'my formated french date'
+```
+
+<img src="assets/formated-date-with-format-function.png" alt="formated-date-with-format-function" style="zoom:50%;" />
+
+`mm` sont les minutes et `MM` le mois.
+
+On peut ajouter entroisième paramètre la `culture` :
+
+```sql
+SELECT format(cast('2015-06-25 01:02:03.456' as datetime), 'D', 'fr-FR') as N'my formated french long date'
+```
+
+<img src="assets/my-formated-long-date-with-culture.png" alt="my-formated-long-date-with-culture" style="zoom:50%;" />
+
+En chinois
+
+```sql
+SELECT format(cast('2015-06-25 01:02:03.456' as datetime), 'D', 'zh-CN') as N'my formated chinese long date'
+```
+
+<img src="assets/my-chinese-formated-long-date.png" alt="my-chinese-formated-long-date" style="zoom:50%;" />
+
+
+
+### `convert` et le type d'affichage
+
+```sql
+CONVERT ( data_type [ ( length ) ] , expression [ , style ] ) 
+```
+
+On peut aussi utiliser un code pour définir le format d'affichage de la `date` avec la fonction `convert`
+
+https://learn.microsoft.com/en-us/sql/t-sql/functions/cast-and-convert-transact-sql?view=sql-server-ver16
+
+<img src="assets/convert-date-and-format-culture-table.png" alt="convert-date-and-format-culture-table" style="zoom:50%;" />
+
+```sql
+DECLARE @date AS datetime = '2015-06-25 01:02:03.456'
+
+SELECT 
+	convert(nvarchar(20), @date, 101),
+	convert(nvarchar(20), @date, 1),
+	convert(nvarchar(20), @date, 105),
+	convert(nvarchar(20), @date, 5),
+	convert(nvarchar(20), @date, 111),
+	convert(nvarchar(20), @date, 11)
+```
+
+<img src="assets/format-type-with-convert.png" alt="format-type-with-convert" style="zoom:50%;" />
+
+Cette technique n'est pas possible avec `cast`.
 

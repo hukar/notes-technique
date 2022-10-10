@@ -1,5 +1,7 @@
 # 12 Boucle `for`
 
+> ## Sauter une ligne dans le terminal `shift + enter`
+
 ```bash
 for i in { ... }
 do
@@ -92,5 +94,18 @@ done : elephant
 done : noodle
 done : rice
 danger instruction
+```
+
+
+
+## Syntaxe sans accolade `{ ... }`
+
+On peut juste mettre les éléments les un à la suite des autres avec un espace :
+
+```bash
+for fruit in coco banana strawberry
+do
+	echo "fruit : $fruit"
+done
 ```
 

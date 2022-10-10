@@ -2,13 +2,29 @@
 
 ## `cmd + k`  super clear
 
-Pour vraiment effacer le terminal : `cmd` + `k`
+### Pour vraiment effacer le terminal : `cmd` + `k`
+
+
+
+## `ctrl + u`
+
+### Pour effacer la ligne en cours
+
+
+
+## `shift + enter` 
+
+### Sauter une ligne dans le terminal
+
+
 
 ## `history`
 
-Affiche les 500 dernières commandes.
+### Affiche les 500 dernières commandes.
 
 Les cinq dernières :  `history 5`
+
+
 
 ## `man`
 
@@ -26,7 +42,11 @@ Les cinq dernières :  `history 5`
 
 S'il y a plusieurs possibilités on peut appuyer deux fois su `tab`.
 
+
+
 ## `ctrl` + l == `clear`
+
+
 
 ## `alt`  + mouse
 

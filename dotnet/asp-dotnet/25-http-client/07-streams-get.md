@@ -53,40 +53,40 @@ Maintenant implémentons le `client` :
 ```cs
 private async Task GetPosterWithStream()
 {
-  // On crée la requête GET
-  var request = new HttpRequestMessage(
-    HttpMethod.Get,
-  	$"api/movies/bb6a100a-053f-4bf8-b271-60ce3aae6eb5/posters/{Guid.NewGuid()}"
-  );
-  // On ajoute le header Accept
-  request.Headers.Accept.Add(
-    new MediaTypeWithQualityHeaderValue("application/json")
-  );
-  
-  // On envoie la requête
-  var response = await _httpClient.SendAsync(request);
-  // On récupére le stream de la response
-  using (var stream = await response.Content.ReadAsStreamAsync())
-  {
+    // On crée la requête GET
+    using HttpRequestMessage request = new(
+        HttpMethod.Get,
+        $"api/movies/bb6a100a-053f-4bf8-b271-60ce3aae6eb5/posters/{Guid.NewGuid()}"
+    );
+    // On ajoute le header Accept
+    request.Headers.Accept.Add(
+        new MediaTypeWithQualityHeaderValue("application/json")
+    );
+
+    // On envoie la requête
+    using HttpResponseMessage response = await _httpClient.SendAsync(request);
+    // On récupére le stream de la response
+    using Stream stream = await response.Content.ReadAsStreamAsync();
+
     // On vérifie le status sinon Exception
     response.EnsureSuccessStatusCode();
 
     // Les streams implémente IDisposable on utilise using
-    using (var streamReader = new StreamReader(stream))
-    {
-      // On utilise JsonTextReader pour récupérer le json
-      using (var jsonTextReader = new JsonTextReader(streamReader))
-      {
-        // On deserialize le json
-        var jsonSerializer = new JsonSerializer();
-        var poster = jsonSerializer.Deserialize<Poster>(jsonTextReader);
-      }
-    } 
-  }
+    using StreamReader streamReader = new(stream);
+
+    // On utilise JsonTextReader pour récupérer le json
+    using JsonTextReader jsonTextReader = new(streamReader);
+
+    // On deserialize le json
+    var jsonSerializer = new JsonSerializer();
+    var poster = jsonSerializer.Deserialize<Poster>(jsonTextReader);
+
+
+
 }
 ```
 
-
+Beaucoup de classes implémente `IDisposable`, il faut donc ajouter des `using`.
 
 ## Amélioration du code
 
@@ -136,28 +136,27 @@ La classe `JsonTextReader` et la classe `JsonSerializer` viennent du package `Ne
 ```cs
 public static class StreamExtensionMethod
 {
-  public static T ReadAndDeserializeFromJson<T>(this Stream stream)
-  {
-    // Vérification préalable
-    if(stream is null)
+    public static T ReadAndDeserializeFromJson<T>(this Stream stream)
     {
-      throw new ArgumentNullException(nameof(stream));
+        // Vérification préalable
+        if(stream is null)
+        {
+            throw new ArgumentNullException(nameof(stream));
+        }
+        if(!stream.CanRead)
+        {
+            throw new NotSupportedException("can't read from this stream");
+        }
+
+        // Traitement du stream
+        using StreamReader streamReader = new(stream);
+        using JsonTextReader jsonTextReader = new(streamReader);
+
+        JsonSerializer jsonSerializer = new();
+        T item = jsonSerializer.Deserialize<T>(jsonTextReader);
+
+        return item;
     }
-    if(!stream.CanRead)
-    {
-      throw new NotSupportedException("can't read from this stream");
-    }
-    
-    // Traitement du stream
-    using(var streamReader = new StreamReader(stream))
-    {
-      using(var jsonTextReader = new JsonTextReader(streamReader))
-      {
-        var jsonSerializer = new JsonSerializer();
-        return jsonSerializer.Deserialize<T>(jsonTextReader);
-      }
-    }
-  }
 }
 ```
 
@@ -166,29 +165,29 @@ On peut donc simplifier notre code :
 ```cs
 private async Task GetPosterWithStream()
 {
-  // On créer la requête Method + Url
-  var request = new HttpRequestMessage(
-  	HttpMethod.Get,
-    $"api/movies/bb6a100a-053f-4bf8-b271-60ce3aae6eb5/posters/{Guid.NewGuid()}"
-  );
-  // On ajoute le header
-  requset.Headers.Accept.Add(
-    new MediaTypeWithQualityHeaderValue("application/json")
-  );
-  
-  // On envoie la requête
-  var response = await _httpClient.SendAsync(request);
-  
-  // On récupère le stream de la respons
-  using(var stream = response.Content.ReadAsStreamAsync())
-  {
+    // On créer la requête Method + Url
+    var request = new HttpRequestMessage(
+        HttpMethod.Get,
+        $"api/movies/bb6a100a-053f-4bf8-b271-60ce3aae6eb5/posters/{Guid.NewGuid()}"
+    );
+    // On ajoute le header
+    requset.Headers.Accept.Add(
+        new MediaTypeWithQualityHeaderValue("application/json")
+    );
+
+    // On envoie la requête
+    var response = await _httpClient.SendAsync(request);
+
+    // On récupère le stream de la respons
+    using Stream stream = response.Content.ReadAsStreamAsync();
+
     // On vérifie le status de la response
     response.EnsureSuccessStatusCode();
-    
+
     // On récupère la donnée parsée depuis le stream
     // avec la méthode d'extension
     var poster = stream.ReadAndDeserializeFromJson<Poster>();
-  }
+
 }
 ```
 
@@ -197,25 +196,25 @@ Et avec le `HttpCompletionOption.ResponseHeadersRead`:
 ```cs
 private async Task GetPosterWithStreamAndCompletionMode()
 {
-  var request = new HttpRequestMessage(
-    HttpMethod.Get,
-    $"api/movies/bb6a100a-053f-4bf8-b271-60ce3aae6eb5/posters/{Guid.NewGuid()}"
-  );
+    using HttpRequestMessage request = new(
+        HttpMethod.Get,
+        $"api/movies/bb6a100a-053f-4bf8-b271-60ce3aae6eb5/posters/{Guid.NewGuid()}"
+    );
 
-  request.Headers.Accept.Add(
-    new MediaTypeWithQualityHeaderValue("application/json")
-  );
+    request.Headers.Accept.Add(
+        new MediaTypeWithQualityHeaderValue("application/json")
+    );
 
-  var response = await _httpClient.SendAsync(
-    request, HttpCompletionOption.ResponseHeadersRead);
-  
-  // On récupére le stream de la response
-  using (var stream = await response.Content.ReadAsStreamAsync())
-  {
+    using  HttpResponseMessage response = await _httpClient.SendAsync(
+        request, HttpCompletionOption.ResponseHeadersRead);
+
+    // On récupére le stream de la response
+    using Stream stream = await response.Content.ReadAsStreamAsync();
+
     response.EnsureSuccessStatusCode();
 
     var poster = stream.ReadAndDeserializeFromJson<Poster>();
-  }
+
 } 
 ```
 

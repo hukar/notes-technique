@@ -17,13 +17,13 @@ public async Task CreateResource()
   
   var serializedMovieToCreate = JsonSerializer.Serialize(movieToCreate);
   
-  var request = new HttpRequestMessage(HttpMethod.Post, "api/movies");
+  using HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "api/movies");
   request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
   
   request.Content = new StringContent(serializedMovieToCreate);
   request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
   
-   var response = await _httpClient.SendAsync(request);
+  using HttpResponseMessage response = await _httpClient.SendAsync(request);
   response.EnsureSuccessStatusCode();
   
   var content = await response.Content.ReadAsStringAsync();
@@ -48,6 +48,18 @@ Il y a trois endroits où cela set possible :
 `HttpRequestMessage.Headers` : pour une certaine requête.
 
 `HttpRequestMessage.Content.Headers` : `header` concernant le contenu de la requête comme `Content-Type`.
+
+On peut aussi spécifier le `Content-Type` directement dans un `StringContent` :
+
+```cs
+ new StringContent(
+    JsonSerializer.Serialize(movieToCreate), 
+    Encoding.UTF8, 
+    "application/json" // <= Content-Type
+  )
+```
+
+
 
 
 

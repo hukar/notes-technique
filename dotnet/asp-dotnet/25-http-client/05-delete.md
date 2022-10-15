@@ -7,13 +7,14 @@
 ```cs
 public async Task DeleteResource()
 {
-  var request = new HttpRequestMessage(HttpMethod.Delete, "api/movies/3d2880ae-5ba6-417c-845d-f4ebfd4bcac7");
-  request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-  
-  var response = await _httpClient.SendAsync(request);
-  response.EnsureSuccessStatusCode();
-  
-  var content = await response.Content.ReadAsStringAsync();
+    using HttpRequestMessage request = new(HttpMethod.Delete, "/api/movies/6e87f657-f2c1-4d90-9b37-cbe43cc6adb9");
+    request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+    using HttpResponseMessage response = await _httpClient.SendAsync(request);
+
+    response.EnsureSuccessStatusCode();
+
+    var content = response.Content.ReadAsStringAsync();
 }
 ```
 

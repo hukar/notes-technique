@@ -8,6 +8,10 @@ L'entiéreté de l'enregistrement est remplacé.
 
 
 
+## Document de référence de `PATCH`
+
+https://tools.ietf.org/html/rfc6902
+
 ## Modification Partielle avec `PATCH`
 
 C'est une bonne pratique d'utiliser `PATCH` plutôt que `PUT`.
@@ -39,7 +43,7 @@ https://datatracker.ietf.org/doc/html/rfc6902
 }
 ```
 
-C'est un tableau d'opérations de modification (un `set` de changements).
+C'est un `tableau` d'opérations de modification (un `set` de changements).
 
 C'est entièrement supporté par `.net`.
 
@@ -61,7 +65,7 @@ Beacoup d'application accepte simplement `application/json`.
 ]
 ```
 
-`remove` peut signifier mettre la valeur par défaut ou carrément retirer la propriété (le champs).
+`remove` peut signifier mettre la valeur par défaut ou carrément retirer la propriété (le champs) pour des langages dynamiques (`js`, `python`).
 
 
 
@@ -93,13 +97,47 @@ dotnet add package Microsoft.AspNetCore.JsonPatch
 
 
 
+### Mise en place de `HttpClient`
+
+```cs
+public class PartialUpdateService : IIntegrationService
+{ 
+    private static HttpClient _httpClient = new();
+
+    public PartialUpdateService()
+    {
+        _httpClient.BaseAddress = new Uri("http://localhost:5000");
+        _httpClient.Timeout = TimeSpan.FromSeconds(30);
+        _httpClient.DefaultRequestHeaders.Clear();
+    }
+
+    public async Task Run()
+    {
+        await PatchResource();
+    }
+```
+
+
+
 ### Implémentation de la méthode `PatchResource`
 
-### `JsonPatchDocument`
+#### `JsonPatchDocument` et une version typé (préférable)
 
-### `Replace(o => o.Property, "new value")`
+### `JsonPatchDocument<T>`
 
-### `Remove(o => o.Property)`
+On a plusieurs méthode :
+
+<img src="assets/built-in-method-for-jsonpatch.png" alt="built-in-method-for-jsonpatch" style="zoom:50%;" />
+
+```
+Add Copy Move Remove Replace Test
+```
+
+
+
+#### `Replace(o => o.Property, "new value")`
+
+#### `Remove(o => o.Property)`
 
 ```cs
 public async Task PatchResource()
@@ -108,22 +146,22 @@ public async Task PatchResource()
   var patchDoc = new JsonPatchDocument();
   
   // version typée : ce qu'on va utiliser
-  var patchDoc = new JsonPatchDocument<MovieForUpdate>();
+  JsonPatchDocument<MovieForUpdate> patchDoc = new();
   patchDoc.Replace(m => m.Title, "New Title Updated");
   patchDoc.Remove(m => m.Description);
   
-  var serializedChangeSet = JsonConvert.SerializeObject(patchDoc);
-  var request = new HttpRequestMessage(HttpMethod.Patch, "api/movies/91dda11e-fe89-4f96-a427-855d4d18b1e7");
+  string serializedChangeSet = JsonConvert.SerializeObject(patchDoc);
+  using HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Patch, "api/movies/91dda11e-fe89-4f96-a427-855d4d18b1e7");
   request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
   
   request.Content = new StringContent(serializedChangeSet); 
   request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json-patch+json");
   
-  var response = await _httpClient.SendAsync(request);
+  using HttpResponseMessage response = await _httpClient.SendAsync(request);
   response.EnsureSuccessStatusCode();
   
-  var content = await response.Content.ReadAsStringAsync();
-  var movieUpdated = JsonConvert.DeserializeObject<Movie>(content);
+  string content = await response.Content.ReadAsStringAsync();
+  Movie movieUpdated = JsonConvert.DeserializeObject<Movie>(content);
 }
 ```
 
@@ -144,7 +182,7 @@ Voici le `ChangeSet` généré :
 
 ## Méthode raccourcie : `PatchAsync`
 
-Ondoit toujours d'abord créer le `patchDoc` :
+On doit toujours d'abord créer le `patchDoc` :
 
 ```cs
 var patchDoc = new JsonPatchDocument<MovieForUpdate>();

@@ -76,7 +76,7 @@ var movies = JsonSerializer.Deserialize<IEnumerable<Movie>>(content);
 
 On obtient bien nos 7 `movies` mais les valeurs ont été initialisées par défaut.
 
-C'est parceque le `json` reçu est `camelCase` alors que les propriétés définies dans la classe `Movie` sont `PascalCase`.
+C'est parceque le `json` reçu est en `camelCase` alors que les propriétés définies dans la classe `Movie` sont en `PascalCase`.
 
 
 
@@ -279,3 +279,7 @@ Le problème des méthodes raccourcies c'est qu'elle ne définisse pas le `heade
 On doit alors le définir avec `httpClient.DefaultRequestHeaders.Accept.Add` pour toute l'application.
 
 Si ce n'est pas possible alors on utilise `HttpRequestMessage` avec `SendAsync`.
+
+### Configurer les `headers` pour toutes les `request` : `httpClient.DefaultRequestHeaders.SomeHeader...`
+
+### Configurer les `hedears` pour une `request` donnée : utilisation de `HttpRequestMeassage request` et `request.Headers.SomeHeader...` 

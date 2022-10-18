@@ -18,7 +18,57 @@ On peut utiliser les `streams` côté `client` avec n'importe quelle `API`, mêm
 
 
 
-## Utiliser `Streams` pour lire des données
+## Utiliser les `Streams` pour lire les données : `System.Text.Json`
+
+C'est une version sans le package `Newtonsoft.Json`, syntaxe possible avec `.Net 6`.
+
+```cs
+private async Task GetPosterWithStreamMicrosoft()
+{
+    using HttpRequestMessage request = new(HttpMethod.Get, $"/api/movies/5b1c2b4d-48c7-402a-80c3-cc796ad49c6b/posters/{Guid.NewGuid()}");
+    request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+    using HttpResponseMessage response = await _httpClient.SendAsync(request);
+
+    response.EnsureSuccessStatusCode();
+
+    using Stream stream = await response.Content.ReadAsStreamAsync();
+
+    Poster poster = JsonSerializer.Deserialize<Poster>(stream, new JsonSerializerOptions {
+        PropertyNamingPolicy = microsoft.JsonNamingPolicy.CamelCase
+    });
+}
+```
+
+On peut utiliser une version `async` du `Deserializer` :
+
+```cs
+Poster poster = await JsonSerializer.DeserializeAsync<Poster>(stream, options);
+```
+
+
+
+`JsonSerializer.Deserialize` prend un `stream` en paramètre.
+
+Toujours la nécéssité de définir `PropertyNamingPolicy` dans `JsonSerializerOptions`.
+
+L'écriture est du coup plus courte qu'avec `Newtosoft.Json`.
+
+Les performances sont aussi meilleurs (cf la partie test).
+
+### Avec `HttpCompletionOption.ResponseHeadersRead`
+
+```cs
+// ...
+using HttpResponseMessage response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
+// ...
+```
+
+
+
+
+
+## Utiliser `Streams` pour lire des données : `Newtonsoft.Json`
 
 Indépendament du `client` ou de l'`API`, `HTTP` utilise le `streaming` pour transporter ses données dans le réseau.
 
@@ -78,15 +128,16 @@ private async Task GetPosterWithStream()
     using JsonTextReader jsonTextReader = new(streamReader);
 
     // On deserialize le json
+    // On instancie la classe car on utilise `Newtonsoft.Json`
+    // et pas 'System.Text.Json'
     var jsonSerializer = new JsonSerializer();
-    var poster = jsonSerializer.Deserialize<Poster>(jsonTextReader);
-
-
-
+    Poster poster = jsonSerializer.Deserialize<Poster>(jsonTextReader);
 }
 ```
 
 Beaucoup de classes implémente `IDisposable`, il faut donc ajouter des `using`.
+
+
 
 ## Amélioration du code
 
@@ -248,6 +299,33 @@ private async Task GetPosterWithoutStream()
 
 
 
+### simplification des méthodes de tests en une seule avec `Func`
+
+```cs
+private async Task TestGetPoster(Func<Task> getPoster, string getPosterName, int numberOfRequest)
+{
+    // Warm up
+    await getPoster();
+
+    // Start Stopwatch
+    Stopwatch stopwatch = Stopwatch.StartNew();
+
+    // Do request
+    for(int i = 0; i < numberOfRequest; i++)
+    {
+        await getPoster();
+    }
+
+    // Stop Stopwatch
+    stopwatch.Stop();
+    Console.WriteLine($"Elapsed millisecond for {getPosterName} : {stopwatch.ElapsedMilliseconds}, elapsed time average {stopwatch.ElapsedMilliseconds/numberOfRequest}");
+} 
+```
+
+
+
+
+
 ### Méthodes de test
 
 `TestGetPosterWithoutStream`
@@ -364,6 +442,68 @@ ________________
 ```
 
 Rien de flagrant au niveau des performances, même pire pour l'avant dernier où celui être censé le plus performant est en fait le moins.
+
+
+
+## Nouveaux résultats en comparant `System.Text.Json` alias `microsoft` et `Newtonsoft.Json` alias `newtonsoft`
+
+On teste `4` fois pour `300` requêtes à chaque fois :
+
+```cs
+int numberOfRequest = 300;
+
+for (int i = 0; i < 4; i++)
+{
+    await TestGetPoster(GetPosterWithoutStream, nameof(GetPosterWithoutStream), numberOfRequest);
+    Console.WriteLine("");
+    await TestGetPoster(GetPosterWithStreamNewtonsoft, nameof(GetPosterWithStreamNewtonsoft), numberOfRequest);
+    await TestGetPoster(GetPosterWithStreamCompletionModeNewtonsoft, nameof(GetPosterWithStreamCompletionModeNewtonsoft), numberOfRequest);
+    Console.WriteLine("");
+    await TestGetPoster(GetPosterWithStreamMicrosoft, nameof(GetPosterWithStreamMicrosoft), numberOfRequest);
+    await TestGetPoster(GetPosterWithStreamCompletionModeMicrosoft, nameof(GetPosterWithStreamCompletionModeMicrosoft), numberOfRequest);
+    Console.WriteLine("- - - - -------------------------------- - - - -\n");
+}
+```
+
+```bash
+Elapsed millisecond for GetPosterWithoutStream :        6542, elapsed time average 21
+
+Elapsed millisecond for GetPosterWithStreamNewtonsoft : 5850, elapsed time average 19
+Elapsed millisecond for GetPosterWithStreamCompletionModeNewtonsoft :   6095, elapsed time average 20
+
+Elapsed millisecond for GetPosterWithStreamMicrosoft :  5797, elapsed time average 19
+Elapsed millisecond for GetPosterWithStreamCompletionModeMicrosoft :    5201, elapsed time average 17
+- - - - -------------------------------- - - - -
+
+Elapsed millisecond for GetPosterWithoutStream :        6116, elapsed time average 20
+
+Elapsed millisecond for GetPosterWithStreamNewtonsoft : 6128, elapsed time average 20
+Elapsed millisecond for GetPosterWithStreamCompletionModeNewtonsoft :   6368, elapsed time average 21
+
+Elapsed millisecond for GetPosterWithStreamMicrosoft :  5707, elapsed time average 19
+Elapsed millisecond for GetPosterWithStreamCompletionModeMicrosoft :    5391, elapsed time average 17
+- - - - -------------------------------- - - - -
+
+Elapsed millisecond for GetPosterWithoutStream :        6096, elapsed time average 20
+
+Elapsed millisecond for GetPosterWithStreamNewtonsoft : 5820, elapsed time average 19
+Elapsed millisecond for GetPosterWithStreamCompletionModeNewtonsoft :   5859, elapsed time average 19
+
+Elapsed millisecond for GetPosterWithStreamMicrosoft :  5360, elapsed time average 17
+Elapsed millisecond for GetPosterWithStreamCompletionModeMicrosoft :    5080, elapsed time average 16
+- - - - -------------------------------- - - - -
+
+Elapsed millisecond for GetPosterWithoutStream :        5980, elapsed time average 19
+
+Elapsed millisecond for GetPosterWithStreamNewtonsoft : 5881, elapsed time average 19
+Elapsed millisecond for GetPosterWithStreamCompletionModeNewtonsoft :   7033, elapsed time average 23
+
+Elapsed millisecond for GetPosterWithStreamMicrosoft :  5212, elapsed time average 17
+Elapsed millisecond for GetPosterWithStreamCompletionModeMicrosoft :    5140, elapsed time average 17
+- - - - -------------------------------- - - - -
+```
+
+Pas de différence significative sauf entre `System.Text.Json` et `Newtonsoft.Json`.
 
 
 

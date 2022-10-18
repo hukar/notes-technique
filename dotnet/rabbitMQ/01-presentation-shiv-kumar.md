@@ -98,3 +98,28 @@ L'utilisation d'une `Queue` avec un seul `Subscriber` conserve la séquence des 
 
 
 
+## Les options de livraison du `message`
+
+<img src="assets/message-broker-delivery-option.png" alt="message-broker-delivery-option" style="zoom:50%;" />
+
+### `Receive and Delete` 
+
+C'est le plus rapide, mais si le `subscriber` crash, le message est perdu.
+
+
+
+### `Peek/Lock` 
+
+Si un `subscriber` *peek* (regarde) un message, celui-ci disparaît pour les autres `subscriber`, mais le message n'est pas supprimé.
+
+Après un certain temps (`timeout`) en cas de crash du Service `subscriber`, il réapparaît dans la `queue`.
+
+Sinon le `subscriber` doit dire que tout est ok pour que le message soit supprimé (`acknowledgment`).
+
+Il existe des mécanismes pour éviter un `poison message` qui ferait inévitablement crasher le service du `subscriber` à l'infini.
+
+
+
+### `Session Peek/Lock`
+
+Ce n'est plus un message et un seul qui est bloqué, mais un ensemble de messages.

@@ -38,6 +38,18 @@ dotnet new sln -o SamouraiApp2 -n TotoEnVacances
 
 `-o` le chemin où placer le contenu généré, crée le dossier s'il n'existe pas.
 
+
+
+## Lister les projets disponibles
+
+```bash
+dotnet new list
+```
+
+<img src="assets/dotnet-new-list-iterm.png" alt="dotnet-new-list-iterm" style="zoom:50%;" />
+
+
+
 ## Créer un projet
 
 ```bash
@@ -168,6 +180,24 @@ dotnet --list-sdks
 
 
 
+## Mettre à jour les `packages` de `template`
+
+Contrôler si les package de template sont à jour :
+
+```bash
+dotnet new update --check-only
+```
+
+```
+All template packages are up-to-date.
+```
+
+Mettre à jour les packages de template :
+
+```bash
+dotnet new update
+```
+
 
 
 ## Utilisation de `aspnet-codegenerator`
@@ -196,4 +226,13 @@ dotnet aspnet-codegenerator -p API/ controller -api -name SelfiesController --re
 `--relativeFolderPath` chemin relatif
 
 `-namespace` spécifie le `namespace`
+
+
+
+## Vider le cache des `package nuget`
+
+```bash
+# Clear all caches (use either command)
+dotnet nuget locals all --clear
+```
 

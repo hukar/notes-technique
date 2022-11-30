@@ -99,3 +99,73 @@ On peut aussi les récupérer avec leur nom de colonne :
 var OrderId = reader["Id"];
 ```
 
+On peut aussi créer une méthode d'extension pour simplifier :
+
+```cs
+public static class SqliteDataReaderExtension
+{
+    public static T? GetByType<T>(this SqliteDataReader reader, string fieldName)
+    {
+        if(reader[fieldName].Equals(DBNull.Value))
+        {
+            return default(T);  
+        }
+
+        return (T)reader[fieldName];
+    }
+}
+```
+
+```cs
+while(reader.Read())
+{
+    employees.Add(
+        new Employee(
+            reader.GetByType<Int64>("Id"),
+            reader.GetByType<string>("Name")!,
+            reader.GetByType<string?>("LastName")
+        )
+    );
+}
+```
+
+> C'est `Int64` qui matche avec le type `INTEGER` de `Sqlite`. `int` étant un alias de `Int32`.
+
+#### ! Il faut utiliser `DBNull.Value` et pas `null`, ce n'est pas la même chose
+
+```cs
+WriteLine($"null == DbNull.Value : {null == DBNull.Value}");
+```
+
+```
+null == DbNull.Value : False
+```
+
+
+
+## Version sur `stackoverflow`
+
+https://stackoverflow.com/questions/2609875/null-safe-way-to-get-values-from-an-idatareader
+
+> J'ai cependant des problèmes de conversion avec `Guid` et `Sqlite`.
+>
+> ```
+> Unhandled exception. System.InvalidCastException: Unable to cast object of type 'System.String' to type 'System.Guid'.
+> ```
+
+```cs
+public static class NullSafeGetter
+{
+   public static T GetValueOrDefault<T>(this IDataRecord row, string fieldName)
+   {
+       int ordinal = row.GetOrdinal(fieldName);
+       return row.GetValueOrDefault<T>(ordinal);
+   }
+
+   public static T GetValueOrDefault<T>(this IDataRecord row, int ordinal)
+   {
+       return (T)(row.IsDBNull(ordinal) ? default(T) : row.GetValue(ordinal));
+   }
+}
+```
+

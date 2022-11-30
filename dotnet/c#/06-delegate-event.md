@@ -4,6 +4,63 @@
 
 ## `Delegate`
 
+> ## `Invoke`
+>
+> On peut invoquer un `delegate` de deux manières différentes :
+>
+> ```cs
+> delegate void MyDelegate(int x);
+> ```
+>
+> ```cs
+> MyDelegate DisplayX = x => WriteLine($"X: {x}");
+> 
+> DisplayX.Invoke(8);
+> // OU
+> DisplayX(8);
+> ```
+>
+> La deuxième écriture est un `helper` du compilateur (un raccourci), mais les deux syntaxes compile de la même manière (`SharpLab`)
+>
+> 
+>
+> ### Utilité avec `null`
+>
+> Si on utilise pas `Invoke`, on doit vérifier que le `delegate` passé n'est pas `null` avant de l'exécuter :
+>
+> ```cs
+> DisplaySomething(null);
+> 
+> void DisplaySomething(MyDelegate? md)
+> {
+>     md(5);
+> } // Unhandled exception. System.NullReferenceException: Object reference not set to an instance of an object.
+> ```
+>
+> On écrit alors :
+>
+> ```cs
+> void DisplaySomething(MyDelegate? md)
+> {
+>     if(md is not null) md(5);
+> }
+> ```
+>
+> Et on ne risque plus d'`exception`.
+>
+> On peut aussi simplifier un peu l'écriture avec `Invoke` :
+>
+> ```cs
+> void DisplaySomething(MyDelegate? md)
+> {
+>     md?.Invoke(5);
+> }
+> ```
+>
+> De nouveau pas d'`exception`.
+
+
+
 C'est un type permettant de définir la signature d'une fonction (d'une méthode) pouvant être attribuée à une variable :
 
 ```cs

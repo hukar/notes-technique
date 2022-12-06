@@ -50,9 +50,9 @@ Je ne sais pas si `SaveChanges` est possible/a un intérêt avec `ADO.Net` ou `D
 
 
 
+On peut aussi utiliser une classe `BaseEntity` qui garantie qu'on a bien un `Id` par exemple.
 
-
-
+<img src="assets/class-base-entity-for-repository.png" alt="class-base-entity-for-repository" style="zoom:50%;" />
 
 
 

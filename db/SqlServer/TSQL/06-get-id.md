@@ -30,3 +30,11 @@ OUTPUT INSERTED.*
 VALUES (@Name, @Price);
 ```
 
+ON peut récupérer n'importe quel champ, par exemple un `Guid` n'étant pas la clé primaire :
+
+```sql
+INSERT INTO Product (Name, Price)
+OUTPUT INSERTED.GuidForUrl
+VALUES (@Name, @Price);
+```
+

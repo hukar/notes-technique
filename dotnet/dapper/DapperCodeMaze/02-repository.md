@@ -5,13 +5,11 @@
 ```cs
 public class DapperContext
 {
-    private readonly IConfiguration _configuration;
     private readonly string _connectionString;
     
     public DapperContext(IConfiguration configuration)
     {
-        _configuration = configuration;
-        _connectionString = _configuration.GetConnectionString("DapperConnection");
+        _connectionString = configuration.GetConnectionString("DapperConnection");
     }
     
     public IDbConnection CreateConnection() => new SqlConnection(_connectionString);
@@ -25,6 +23,38 @@ On l'enregistre comme un service :
 ```cs
 builder.Services.AddSingleton<DapperContext>();
 ```
+
+
+
+## Model
+
+`Employee`
+
+```cs
+public class Employee
+{
+    public int Id { get; set; }
+    public string? Name { get; set; }
+    public int Age { get; set; }
+    public string? Position { get; set; }
+    public int CompanyId { get; set; }
+}
+```
+
+`Company`
+
+```cs
+public class Company
+{
+    public int Id { get; set; }
+    public string? Name { get; set; }
+    public string? Address { get; set; }
+    public string? Country { get; set; }
+    public List<Employee> Employees { get; set; } = new();
+}
+```
+
+
 
 
 

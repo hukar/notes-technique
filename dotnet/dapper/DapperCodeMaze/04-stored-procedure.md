@@ -45,7 +45,9 @@ public async Task<Company> GetCompanyByEmployeeId(int id)
 }
 ```
 
+`ParameterDirection.Input` n'est pas nécessaire.
 
+Par contre préciser `commandType: CommandType.StoredProcedure` est obligatoire.
 
 ## Le `Endpoint`
 

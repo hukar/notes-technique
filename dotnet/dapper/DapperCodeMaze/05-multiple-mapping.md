@@ -77,7 +77,7 @@ GET {{root}}/companies/1/employees HTTP/1.1
 
 
 
-## Avec un `JOIN` et `QueryAsync`
+## Avec un `JOIN` , `QueryAsync` et un `Dictionary`
 
 ```cs
 public interface ICompanyRepository
@@ -120,44 +120,54 @@ On peut aussi renvoyer ceci :
 return companyDict.Values.ToList();
 ```
 
+Et simplifier la méthode :
+
+```cs
+public async Task<List<Company>> MultipleMappingDictionary()
+{
+    var sql = @"SELECT * FROM Companies c
+                    LEFT JOIN Employees e
+                    ON c.Id = e.companyId";
+
+    var companiesDictionary = new Dictionary<int, Company>();
+
+    using var connection = _context.CreateConnection();
+
+    var companies = 
+        await connection.QueryAsync<Company, Employee, Company>(
+        sql, (company, employee) => 
+        {
+            if(companiesDictionary.ContainsKey(company.Id) == false) 
+                companiesDictionary.Add(company.Id, company);
+
+            if(employee is not null) 
+                companiesDictionary[company.Id].Employees.Add(employee);
+
+            return company;
+        });
+
+    return companiesDictionary.Values.ToList();
+}
+```
+
+De plus cette méthode utilise un `LEFT JOIN` et récupère aussi les `companies` sans `employees` :
+
 ```json
 [
   {
     "id": 1,
     "name": "IT_Solutions Ltd",
-    "address": "583 Wall Dr. Gwynn Oak, MD 21207",
-    "country": "USA",
-    "employees": [
-      {
-        "id": 1,
-        "name": "Sam Raiden",
-        "age": 26,
-        "position": "Software developer",
-        "companyId": 1
-      },
-      {
-        "id": 3,
-        "name": "Jana McLeaf",
-        "age": 30,
-        "position": "Software developer",
-        "companyId": 1
-      }
-    ]
+    "employees": [ { "name": "Sam Raiden" }, { "name": "Jana McLeaf" } ]
   },
   {
     "id": 2,
     "name": "Admin_Solutions Ltd",
-    "address": "312 Forest Avenue, BF 923",
-    "country": "USA",
-    "employees": [
-      {
-        "id": 2,
-        "name": "Kane Miller",
-        "age": 35,
-        "position": "Administrator",
-        "companyId": 2
-      }
-    ]
+    "employees": [ { "name": "Kane Miller" } ]
+  },
+  {
+    "id": 3,
+    "name": "Hukar & Co Lc",
+    "employees": []
   }
 ]
 ```
@@ -190,21 +200,23 @@ var companies = await connection.QueryAsync<Company, Employee, Company>(sql, (co
 Companies contient une collection d'objet `company` où chaque `company` contient un ou zéro `employee`.
 
 ```cs
-var companiesGroup = companies.GroupBy(company => company.Id).ToList();
+var companiesGroup = companies.GroupBy(company => company.Id);
 ```
 Pour fusionner les `company` identique (même `Id`), on utilise un `GroupBY`.
 Le `GroupBy`créé une collection de tableau qu'on va projeter avec `SELECT`.
 
 ```cs
-var companiesOutput = companiesGroup.Select((group, index) => {
-    var company = group.FirstOrDefault();
-
-    company!.Employees = group.Where(company => company.Employees.Count > 0).Select(company => company.Employees.First()).ToList();
+var companiesOutput = companiesGroup.Select(cg => {
+    var company = cg.First();
+    var employees = cg.Where(c => c.Employees.Count >= 1)
+                      .Select(c =>  c.Employees.First());
+    
+    company.Employees.AddRange(employees); 
 
     return company;
 });
 ```
-La projection renvoie la première `company` (on la veut en un seul exemplaire) et lui assigne la liste des `employees` si (`Where`) il y a au moins un `employee`.
+La projection renvoie la première `company` (on la veut en un seul exemplaire) et lui ajoute la liste des `employees`.
 ```cs
 return companiesOutput;
 ```
@@ -212,53 +224,81 @@ return companiesOutput;
 ### Résultat
 
 ```json
-
 [
   {
     "id": 1,
     "name": "IT_Solutions Ltd",
-    "address": "583 Wall Dr. Gwynn Oak, MD 21207",
-    "country": "USA",
-    "employees": [
-      {
-        "id": 1,
-        "name": "Sam Raiden",
-        "age": 26,
-        "position": "Software developer",
-        "companyId": 1
-      },
-      {
-        "id": 3,
-        "name": "Jana McLeaf",
-        "age": 30,
-        "position": "Software developer",
-        "companyId": 1
-      }
-    ]
+    "employees": [ { "name": "Sam Raiden" }, { "name": "Jana McLeaf" } ]
   },
   {
     "id": 2,
     "name": "Admin_Solutions Ltd",
-    "address": "312 Forest Avenue, BF 923",
-    "country": "USA",
-    "employees": [
-      {
-        "id": 2,
-        "name": "Kane Miller",
-        "age": 35,
-        "position": "Administrator",
-        "companyId": 2
-      }
-    ]
+    "employees": [ { "name": "Kane Miller" } ]
   },
   {
     "id": 3,
-    "name": "Koala",
-    "address": "Rain Forest, 89",
-    "country": "Brazil",
+    "name": "Hukar & Co Lc",
     "employees": []
   }
 ]
 ```
 
 Il n'y a pas de doublons et la dernière `company` a bien une liste vide d'`employee`.
+
+
+
+## Comparaison de performance
+
+```
+MultipleMappingWithoutDictionary : 00:00:03.2630628
+MultipleMappingDictionary : 	   00:00:02.8894060
+
+MultipleMappingWithoutDictionary : 00:00:03.0548791
+MultipleMappingDictionary : 	   00:00:02.8252030
+
+MultipleMappingWithoutDictionary :  00:00:02.8749393
+MultipleMappingDictionary : 		00:00:02.8443562
+
+MultipleMappingWithoutDictionary : 00:00:02.9407072
+MultipleMappingDictionary : 	   00:00:03.1429534
+
+MultipleMappingWithoutDictionary : 00:00:03.0395199
+MultipleMappingDictionary : 	   00:00:02.9371880
+```
+
+La méthode avec `Dictionary` semble un tout petit peu plus efficace.
+
+### Code de test
+
+```cs
+routeCompany.MapGet("/testperformances", async (ICompanyRepository db) => {
+
+    int nbOfLoops = 3000;
+
+    Stopwatch stopwatch = new();
+
+    stopwatch.Start();
+    for(int i = 0; i < nbOfLoops; i++)
+    {
+        await db.MultipleMappingWithoutDictionary();
+    }
+    stopwatch.Stop();
+
+    Console.WriteLine($"MultipleMappingWithoutDictionary : {stopwatch.Elapsed}");
+
+    stopwatch.Restart();
+    for(int i = 0; i < nbOfLoops; i++)
+    {
+        await db.MultipleMappingDictionary();
+    }
+    stopwatch.Stop();
+
+    Console.WriteLine($"MultipleMappingDictionary : {stopwatch.Elapsed}");
+
+    return Ok();
+});
+```
+
+
+
+## `Transaction` avec `Dapper`

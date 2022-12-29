@@ -300,5 +300,3 @@ routeCompany.MapGet("/testperformances", async (ICompanyRepository db) => {
 ```
 
 
-
-## `Transaction` avec `Dapper`

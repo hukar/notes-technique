@@ -4,6 +4,67 @@ C'est une classe `static` contenant plein d'informations.
 
 
 
+## Définir le type d'`environment` : `Development`, `Staging`, `Production`
+
+On peut définir le type d'environnement dans le fichier `launchSettings.json` en assignant une valeur à la variable d'environement `ASPNETCORE_ENVIRONMENT` :
+
+<img src="assets/aspnetcore-environment-setting-value-in-appsettings-json.png" alt="aspnetcore-environment-setting-value-in-appsettings-json" style="zoom:50%;" />
+
+
+
+### Utilisation dans le code
+
+On peut se servir de cette info pour configurer les `middleware` par exemple dans `Program.cs` :
+
+```cs
+if(app.Environment.IsProduction()) 
+    Console.WriteLine("Production Environment");
+if(app.Environment.IsDevelopment()) 
+    Console.WriteLine("Development Environment");
+```
+
+On utilise les méthodes `IsProduction`, `IsStaging` et `IsDevelopment` de la classe `Envirinment`.
+
+
+
+### Configuration par environement
+
+On peut aussi créer des `settings` différents suivant le type d'environnement :
+
+<img src="assets/variant-app-settings-json-type-environment.png" alt="variant-app-settings-json-type-environment" style="zoom:50%;" />
+
+Cela permet par exemple de renseigner des `DB` différentes suivant l'environement.
+
+
+
+### Changer d'environement dans `VSCode` en `Debbug`
+
+Si on veut tester notre `app` dans un environement particulier, on peut ajouter des configurations de `launch` dans `.vscode/launch.json` :
+
+```json
+"configurations": [
+        {
+            "name": ".NET Core Launch (Development)",
+            // ...
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            // ...
+        },
+        {
+            "name": ".NET Core Launch (Production)",
+            // ...
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Production"
+            },
+            // ...
+        },
+```
+
+<img src="assets/vscode-select-environment-type.png" alt="vscode-select-environment-type" style="zoom:50%;" />
+
+
+
 ## `GetEnvironmentVariables`
 
 Renvoie un `IDictionary` avec les variables :

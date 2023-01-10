@@ -366,6 +366,19 @@ Cela permet d'appliquer certaines règles dans un certain cas.
 
 
 
+## Valider un champ `Enum`
+
+Vérifie si la valeur du champ est bien contenu dans les limites des valeurs de l'`enum`.
+
+```cs
+RuleFor(u => u.Gender)
+    	.IsInEnum();
+```
+
+
+
+
+
 ## Réutiliser un `Validator` dans un autre.
 
 On va créer un `Validator` pour `Order` :
@@ -398,7 +411,7 @@ public class OrderValidator : AbstractValidator<Order>
 
 ```cs
 RuleFor(x => x.Order)
-    .SetValidator(new OrderVa	lidator());
+    .SetValidator(new OrderValidator());
 ```
 
 

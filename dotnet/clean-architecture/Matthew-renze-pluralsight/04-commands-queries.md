@@ -1,4 +1,4 @@
-# `Commands` et `Queries`
+# 04 `Commands` et `Queries`
 
 Bertrand Meyer (1988) sépare les actions possible dans un logicielle en deux concepts séparés :
 

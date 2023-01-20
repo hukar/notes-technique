@@ -95,17 +95,48 @@ Il existe d'autres `endpoints` mais ceci sont suffisant pour expliquer le `Flow`
 
 
 
+## Types de `Flow`
+
+Trois `flows` importants sont définis par `OpenID Connect`:
+
+- `Authorization Code Flow`
+- `Implicit Flow`
+- `Hybrid Flow`
+
+On peut considérer `Implicit Flow` et `Hybrid Flow` comme obsolètes.
+
+Pour les deux types de `Client`, `Confidential Clients` et `Public Clients`, les bonne pratiques suggèrent d'utiliser `Authorization Code Flow` avec `PKCE`.
+
+Ce `Flow` porte ce nom car il retourne un `Code` de son `Authorization Endpoint`.
 
 
 
+### `Authorization Code`
+
+Il a une courte durée de vie, l'utilisation unique des `Credentials`, utilisé pour vérifier que l'`utilisateur` qui est loggué au niveau du `Identity Provider` est le même que celui qui a commencé le `Flow` au niveau de l'`application cliente`.
+
+Dans ce `Flow` les `Tokens` sont retournés depuis le `Token Endpoint`.
+
+Si le `Flow` est `Authenticated` (`Confidential Clients`) il autorise un accès long (`long-life access`) grâce au `refresh token`.
+
+Pour le `public clients`, qui ne peut pas stocké des `Credentials` de manière sécurisé, il n'est pas intéressant d'envoyer une `Authoticated Request`.
+
+Du coup le `Long-Live Access` est restreint, un `refresh token` est possible, mais seulement une seule fois.
+
+<img src="assets/openid-connect-flows-schema.png" alt="openid-connect-flows-schema" style="zoom:50%;" />
+
+> ## `OpenId Connect` pour les `Public Client`
+>
+> Pour les applications `front` comme `Angular`, `React`, `Blazor WASM`, la tendance veut que la sécurité soit gérée plutôt côté serveur que côté client.
+>
+> Le `Flow` est géré au niveau de l'`application hébergente`(`hosting application`).
+>
+> Voire le pattern `BFF` (`Backend For Frontend`).
 
 
 
+## Choisir un `Flow`
 
+Rien n'empêche techniquement de choisir tel ou tel `Flow`, mais choisir le mauvais ouvre un trou de sécurité.
 
-
-
-
-
-
-
+> Le truc avec la sécurité, c'est que plein d'approche vont fonctionner, mais la plupart d'entre elle ne sont pas de bonne idée.

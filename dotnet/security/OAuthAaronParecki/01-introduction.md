@@ -44,7 +44,7 @@ les `services` (`applications`) n'ont pas besoin de connaître l'identité de l'
 
 Il n'y a rien dans `OAuth` qui communique les informations sur l'`utilisateur`.
 
-Sin on a besoin de connaître quelque chose sur l'`utilisateur`, c'est là que `OpenID Connect` intervient.
+Si on a besoin de connaître quelque chose sur l'`utilisateur`, c'est là que `OpenID Connect` intervient.
 
 `OpenID Connect` est une extension de `OAuth` qui permet au serveur `OAuth` de communiquer des donnée sur l'`utilisateur` en retour à l'`application` appelante.
 

@@ -73,3 +73,14 @@ Toto
 12
 ```
 
+
+
+## Héritage des `records`
+
+```cs
+var HyperRobot = new HyperRobot("FT-178", 450, "FireBlaster");
+
+public record Robot(string CodeName, int Power);
+public record HyperRobot(string CodeName, int Power, string Weapon) : Robot(CodeName, Power)
+```
+

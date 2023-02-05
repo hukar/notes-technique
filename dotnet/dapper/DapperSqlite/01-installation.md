@@ -5,7 +5,7 @@
 ## Installer les dépendances
 
 ```bash
-dotnet add package Micrisift.Data.Sqlite
+dotnet add package Microsoft.Data.Sqlite
 
 dotnet add package dapper
 ```
@@ -15,6 +15,18 @@ dotnet add package dapper
 
 
 ## Créer une `DB` dans un fichier
+
+Il suffit de créer une connexion et de l'ouvrir pour créer un fichier `DB`.Il suffit de créer une connexion et de l'ouvrir pour créer un fichier `DB`.
+
+### `Connection String` : `"Data Source=DbName.db"`
+
+```cs
+using var conn = new SqliteConnection("Data Source=robot.db");
+
+conn.Open();
+```
+
+<img src="assets/db-in%20-file-sqlite.png" alt="db-in -file-sqlite" style="zoom:50%;" />
 
 > ### `In Memory`
 >
@@ -32,12 +44,3 @@ dotnet add package dapper
 >
 > La `DB` persiste tant qu'il reste au moins une connexion ouverte.
 
-Il suffit de créer une connexion et de l'ouvrir pour créer un fichier `DB`.Il suffit de créer une connexion et de l'ouvrir pour créer un fichier `DB`.
-
-```cs
-using var conn = new SqliteConnection("Data Source=robot.db");
-
-conn.Open();
-```
-
-<img src="assets/db-in%20-file-sqlite.png" alt="db-in -file-sqlite" style="zoom:50%;" />

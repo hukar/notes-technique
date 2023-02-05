@@ -16,7 +16,7 @@ public class DapperContext
 }
 ```
 
-Peut-être pas nécessaire (???)
+> Cela permet d'avoir une nouvelle instance de `IDbConnection` à chaque fois.
 
 On l'enregistre comme un service :
 

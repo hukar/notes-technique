@@ -6,7 +6,7 @@ On part d'une application web vide :
 dotnet new web -o LiteServer
 ```
 
-On ajoute un dossier `wwwroot`.
+On ajoute un dossier `wwwroot` (le dossier par défaut).
 
 On modifie `Startup.js` :
 

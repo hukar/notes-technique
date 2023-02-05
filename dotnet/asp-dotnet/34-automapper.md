@@ -51,7 +51,7 @@ public class MyAppProfile : Profile
 {
     public MyAppProfile()
     {
-        CReateMap<User, UserDto>();
+        CreateMap<User, UserDto>();
     }
 }
 ```

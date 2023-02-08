@@ -9,7 +9,7 @@ public class DatabaseBootstrap
 {
  	public void Setup()
     {
-        using var connection = new SqliteConnection("Data Source=Robot.db");
+        using var connection = new SqliteConnection("Data Source=RobotApp.db");
         
         var testIfTableExists = @"SELECT name
         							FROM sqlite_master

@@ -17,7 +17,7 @@ Puis on l'implémente :
 public async Task<Company?> GetMultipleResults(int id)
 {
     var sql = @"SELECT * FROM Companies WHERE Id = @id;
-                    SELECT * FROM Employees WHERE CompanyId = @id";
+                SELECT * FROM Employees WHERE CompanyId = @id";
 
     using var connection = _context.CreateConnection();
     using var multi = await connection.QueryMultipleAsync(sql, new { id });
@@ -78,6 +78,14 @@ GET {{root}}/companies/1/employees HTTP/1.1
 
 
 ## Avec un `JOIN` , `QueryAsync` et un `Dictionary`
+
+### `conn.QueryAsync<T1, T2, T3, ..., TReturn>(sql, Func<T1, T2, T3, ..., TReturn>)`
+
+```cs
+connection.QueryAsync<Company, Employee, Company>
+```
+
+Ici on récupère donc en argument de la `Func lambda` une `Company`, un `Employee` et on retourne une `Company`.
 
 ```cs
 public interface ICompanyRepository
@@ -179,9 +187,10 @@ De plus cette méthode utilise un `LEFT JOIN` et récupère aussi les `companies
 Cette version gère les valeur `null` et fonctionne avec un `LEFT JOIN`
 
 ```cs
-var sql = @"SELECT * FROM Companies c
-                    LEFT JOIN Employees e 
-                    ON e.CompanyId = c.Id";
+var sql = @"SELECT * 
+			FROM Companies c
+            LEFT JOIN Employees e 
+            ON e.CompanyId = c.Id";
 
 using var connection = _dapperContext.CreateConnection();
 ```
@@ -211,7 +220,8 @@ var companiesOutput = companiesGroup.Select(cg => {
     var employees = cg.Where(c => c.Employees.Count >= 1)
                       .Select(c =>  c.Employees.First());
     
-    company.Employees.AddRange(employees); 
+    // company.Employees.AddRange(employees); Provoqie des doublons
+    company.Employees = employees;
 
     return company;
 });
@@ -298,5 +308,4 @@ routeCompany.MapGet("/testperformances", async (ICompanyRepository db) => {
     return Ok();
 });
 ```
-
 

@@ -170,13 +170,11 @@ select rowid as rowid, * from TestId
 
 <img src="assets/rowid-alis-id-integer.png" alt="rowid-alis-id-integer" style="zoom:50%;" />
 
-On peut aussi utiliser le fait que `Dapper` ntérate pour vous sur une liste :
+On peut aussi utiliser le fait que `Dapper` itérate pour vous sur une liste :
 
 ```cs
-await connection.ExecuteAsync(sql, listOfDatas);
+await connection.ExecuteAsync(sql, listOfDatas)
 ```
-
-Dans 
 
 `params Robot[] robots` permet de remplir la table avec autant de `robot` que l'on souhaite :
 

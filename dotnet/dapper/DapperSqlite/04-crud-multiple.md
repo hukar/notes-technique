@@ -65,3 +65,31 @@ Ici le valeurs `null` pour `Weapon` sont gérer et s'il n'y a pas de `Weapon`, o
 ]
 ```
 
+
+
+## Récupérer un `Robot` avec ses `Weapons` : `GetRobotWithWeaponsById`
+
+```cs
+public async Task<Robot?> GetRobotWithWeaponsById(int id)
+{
+    var sql = @"SELECT * FROM Robot WHERE Id = @id;
+                SELECT * FROM Weapon WHERE RobotId = @id;";
+
+    using var connection = _context.CreateConnection();
+
+    var gridReader = await connection.QueryMultipleAsync(sql, new { id });
+
+    var robot = await gridReader.ReadSingleOrDefaultAsync<Robot>();
+    var weapons = await gridReader.ReadAsync<Weapon>();
+
+    if(robot is not null) robot.Weapons = weapons.ToList();
+
+    return robot;
+}
+```
+
+Ici on utilisera deux `SELECT` et `QueryMultipleAsync`.
+
+On reçoit un `GridReader` à travers duquel on accède simplement aux données avec `Read...` : ici `ReadSingleOrDefaultAsync`  pour un objet censé être `null` ou unique et `ReadAsync` pour une liste.
+
+On remarque la précaution `if(robot is not null)` pour éviter un `NullReferenceException`.

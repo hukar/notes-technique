@@ -4,7 +4,56 @@ https://www.youtube.com/watch?v=sPjy97LcCO0&t=1520s&ab_channel=ShivKumar
 
 
 
-## Message Brokers
+## Différent type de traitement `asynchrone`
+
+- `Async Background Work`
+  Typiquement des `Threads` dans le `background`, pour ne pas bloquer l'`UI Thread` par exemple.
+- `Async Fire & Forget`
+  On communique avec un `service` (par exemple via `HTTP`) mais on n'est pas intéressé par la `réponse`. On n'attend pas de savoir si le `job` est un `succès` ou non.
+- `Async I/O`
+  `async/await`, principalement pour communiquer avec le `File System` ou via le `réseau`, communiquer avec l'extérieur.
+- `Out-Of-Band Async`
+  C'est ici que le `message broker` arrive. C'est un processus à l'extérieur de l'`application`. 
+
+
+
+## Envoyer un `email`
+
+<img src="assets/sending-an-email-why-when.png" alt="sending-an-email-why-when" />
+
+`MSMQ` est une `queue` propre à `Windows` et sur la même machine que l'`application`.
+
+Les `messages` envoyés à la `queue` doivent être court car la taille d'une `queue` est limité.
+
+Une `Console Application` est `subscriber` pour cette `queue` et reçoit le `message`.
+
+> De manière générale avec un `message broker`, le message ne doit pas contenir l'ensemble des informations, mais seulement un identifiant permettant au `subscriber` de retrouver ces `données`. Le `subscriber` a aussi accès à la `DB`.
+
+On a pas besoin de bloquer notre `application` juste pour envoyer un `email`.
+
+Cette tâche peux prendre un certain temps, elle peut échouer, l'`application` principale ne doit pas être dépendante de cette action. C'est une tâche asynchrone `out-of-band`.
+
+Si on veut envoyer `10 000` `emails`, on envoie seulement `10 000 messages` au `message broker` ce qui est quasi immédiat, la `Console app subscriber` pourra alors gérer chaque `demande` de manière `asynchrone` sans que cela ralantisse l'`application`.
+
+Dans le second modèle on sépare la `queue` de l'`application` pour en faire un `service` autonome.
+
+La `Console App` peut ou non tournée en continue, ou bien tournée par moment via un `scheduler`.
+
+
+
+## Quelque `Message Brokers`
+
+- `MSMQ`
+- `RabbitMQ`
+- `Azure Queues`
+- `Azure Service Bus`
+- `Amazon MQ & SQS`
+- `Apache Kafka`
+- `IBM MQ`
+
+
+
+## Message Brokers  : `Queues`
 
 "Courtiers en messages"
 

@@ -84,7 +84,7 @@ C'est une bonne pratique de les utiliser le plus possible.
 ```cs
 var movieToCreate = new MovieForCreation() { ... };
 
-var response = _httpClient.PostAsync(
+var response = await _httpClient.PostAsync(
 	"api/movies",
   new StringContent(
     JsonSerializer.Serialize(movieToCreate), 

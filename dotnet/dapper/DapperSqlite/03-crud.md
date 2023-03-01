@@ -83,7 +83,29 @@ var sql = @"INSERT INTO Robot (CodeName, CreatedAt)
             VALUES (@CodeName, @CreatedAt)";
 ```
 
+On peut vouloir renvoyer l'objet créé comme pour une `API` : `SELECT last_insert_rowid()`
 
+```cs
+public async Task<Robot> Create(Robot entityToCreate)
+{
+    var sql = @"INSERT INTO Robot ( CodeName, CreatedAt, CreatedBY )
+                VALUES ( @CodeName, @CreatedAt, @CreatedBy );
+                SELECT last_insert_rowid();";
+
+    using var connection = _context.CreateConnection();
+
+    entityToCreate.CreatedAt = DateTime.Now;
+    entityToCreate.CreatedBy = "SYSTEM";
+
+    var lastInsertedId = await connection.ExecuteScalarAsync<int>(sql, entityToCreate);
+
+    entityToCreate.Id = lastInsertedId;
+
+    return entityToCreate;
+}
+```
+
+J'utilise `ExecuteScalarAsync ` pour récupérer l'`id` plutôt que `ExecuteAsync` qui renvoie lui le nombre de ligne(s) modifiée(s).
 
 ## Modifier : `Update`
 

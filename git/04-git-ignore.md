@@ -49,3 +49,27 @@ git rm -r --cached myDirectory
 
 
 
+### Si on ajoute `.gitignore` en cours de projet
+
+https://stackoverflow.com/questions/19663093/apply-gitignore-on-an-existing-repository-already-tracking-large-number-of-file
+
+Si on a déjà un `repository` et que l'on veuille utiliser un fichier `.gitignore` voici une procédure :
+
+```bash
+git rm -r --cached .
+```
+
+Cela retire tout de l'index.
+
+```bash
+git add .
+```
+
+On ajoute maintenant de nouveau l'ensemble du projet mais cette fois `.gitignore` agit.
+
+```bash
+git commit -m ".gitignore is now working"
+```
+
+
+

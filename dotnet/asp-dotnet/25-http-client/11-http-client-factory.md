@@ -36,7 +36,6 @@ On peut configurer `HttpMessageHandler` et les `Policies` depuis `HttpClientFact
 On installe le package `Microsoft.Extensions.Http`
 
 ```bash
-
 dotnet add package Microsoft.Extensions.Htpp
 ```
 

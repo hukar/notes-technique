@@ -282,4 +282,4 @@ Si ce n'est pas possible alors on utilise `HttpRequestMessage` avec `SendAsync`.
 
 ### Configurer les `headers` pour toutes les `request` : `httpClient.DefaultRequestHeaders.SomeHeader...`
 
-### Configurer les `hedears` pour une `request` donnée : utilisation de `HttpRequestMeassage request` et `request.Headers.SomeHeader...` 
+### Configurer les `headers` pour une `request` donnée : utilisation de `HttpRequestMeassage request` et `request.Headers.SomeHeader...` 

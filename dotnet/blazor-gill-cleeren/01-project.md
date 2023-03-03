@@ -29,7 +29,7 @@ Dans `index.html`
 <!-- ... -->
 
 	<script src="_framework/blazor.webassembly.js"></script>
-    <script src="_content/MudBlazor/MudBlazor.min.js"></script>
+    <script src="_content/MudBlazor/MudBlazor.min.js"></script> // <-
 </body>
 ```
 
@@ -44,12 +44,48 @@ builder.Services.AddMudServices();
 Dans `MainLayout.razor`
 
 ```html
+@inherits LayoutComponentBase
+
 <MudThemeProvider/>
 <MudDialogProvider/>
 <MudSnackbarProvider/>
 ```
 
 
+
+## `index.html`
+
+C'est le point d'entrée de l'application dans le navigateur. Il utilise du `javascript` pour charger le code `Blazor` de l'application :
+
+```html
+<script src="_framework/blazor.webassembly.js"></script>
+```
+
+L'application `Blazor` sera chargée dans cette page (`SPA` car il n'y a qu'un fichier `.html`).
+
+## `Program.cs`
+
+C'est le point d'entrée de l'application `Blazor`.
+
+C'est ici que l'on définit le lien avec `index.html` grâce à `builder.RootComponents.Add`:
+
+<img src="assets/bootstrap-blazor-application-component.png" alt="bootstrap-blazor-application-component" />
+
+
+
+## `App.razor`
+
+Contient le `Router` et défini le `component layout`.
+
+
+
+## `MainLayout.razor`
+
+C'est depuis ce `component` que les `pages` et les autres `component` seront afficher.
+
+<img src="assets/body-and-pages-link.png" alt="body-and-pages-link" />
+
+L'emplacement des pages est représenté par `@Body`.
 
 ## Choix et ajout du `template`
 

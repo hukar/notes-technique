@@ -34,6 +34,18 @@
 
 `@page` définit la route à laquelle la `page` (le composant `page`) doit s'afficher.
 
+> ## `@page` est `case insensitive`
+>
+> <img src="assets/counter-url-case-insensitive.png" alt="counter-url-case-insensitive" />
+>
+> Et dans le navigateur:
+>
+> <img src="assets/url-in-browser-case-insensitive.png" alt="url-in-browser-case-insensitive" />
+>
+> Et vice et versa:
+>
+> <img src="assets/case-insensitive-reverse-mode.png" alt="case-insensitive-reverse-mode" />
+
 `@onclick` est l'événement auquel on passe le nom d'une méthode devant s'exécuter.
 
 Dans `MudBlazor`, c'est l'attribut `OnClick`.

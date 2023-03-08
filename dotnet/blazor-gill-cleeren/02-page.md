@@ -9,7 +9,7 @@
 ```asp
 @page "/counter"
 
-<h1>Counetr Page</h1>
+<h1>Counter Page</h1>
 <p>Current Count: @currentCount</p>
 <p>
     <MudButton 

@@ -107,7 +107,7 @@ class MyAppContextFactory : IDesignTimeDbContextFactory<MyAppContext>
 }
 ```
 
-Il faut ajouter ceci dans `MyApp.cs` pour ne pas avoir une erreur :
+Il faut ajouter ceci dans `MyApp.csproj` pour ne pas avoir une erreur :
 
 ```xml
   // ...
@@ -123,3 +123,4 @@ Il faut ajouter ceci dans `MyApp.cs` pour ne pas avoir une erreur :
 ```
 
 On a maintenant les `migrations` fonctionnant parfaitement dans notre `classlib`.
+

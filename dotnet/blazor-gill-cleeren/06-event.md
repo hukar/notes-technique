@@ -137,3 +137,52 @@ void Show()
 }
 ```
 
+
+
+### En passant un paramètre `EventCallback<TObject>`
+
+```html
+<MudButton 
+           StartIcon="@Icons.Material.Filled.Face5" 
+           IconClass="pink-text text-accent-3" 
+           Variant="Variant.Text" 
+           Color="Color.Primary" 
+           OnClick="async () => await OnShowDetailsCallback.InvokeAsync(Employee)">Employee Details</MudButton>
+```
+
+```cs
+@code {
+
+    [Parameter]
+    public Employee? Employee { get; set; }
+
+    [Parameter]
+    public EventCallback<Employee> OnShowDetailsCallback { get; set; }
+```
+>
+> La syntaxe `async () => await OnShowDetailsCallback.InvokeAsync(Employee)` ne semble pas simplifiable.
+
+Dans le `parent component`:
+
+```html
+<EmployeeCard Employee="employee" OnShowDetailsCallback="ShowDetails" />
+```
+
+```cs
+@code {
+    ...
+void ShowDetails(Employee employee)
+{
+    currentEmployee = employee;
+}
+```
+
+Et enfin dans le `template` du `component` parent:
+
+```html
+@if(currentEmployee is not null)
+{
+    <EmployeeDetail Employee="currentEmployee" CloseDetailsCallback="CloseDetails" />
+}
+```
+

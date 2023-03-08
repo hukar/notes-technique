@@ -2,6 +2,15 @@
 
 
 
+## Naviguer dans une application `Blazor`
+
+- Le `Router` dans `App.razor` est le point d'entrée
+- la directive `@page` permet le `routing` vers un `component`
+- Cette `directive` peut accepter des paramètres
+- On peut utiliser `NavigationManager` pour une navigation `code-based`
+
+
+
 ## `NavLink`
 
 C'est un `component` fourni par `Blazor` permettant de naviguer dans l'`application`:

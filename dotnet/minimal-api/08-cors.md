@@ -7,10 +7,12 @@ Il faut ajouter un `service` : `AddCors` et un `middleware` : `UseCors`
 ```cs
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(name: "MyAllowSpecificOrigins", o => 
-    {
-      o.WithOrigins("https://localhost:7007", "http://titi.lesmoulineaux");
-		});
+    options.AddPolicy(name: "MyAllowSpecificOrigins",
+                      policy  =>
+                      {
+                          policy.WithOrigins("http://localhost:5135")
+                                .AllowAnyMethod();
+                      });
 });
 
 // ...
@@ -20,12 +22,12 @@ app.UseCors();
 
 Les `Urls` sont celles du `Client`.
 
-`o` est de type `CorsPolicyBuilder` et a plusieurs méthode :
+`policy` est de type `CorsPolicyBuilder` et a plusieurs méthode :
 
 ```cs
-o.AllowAnyOrigin();
-o.WithMethods("GET");
-o.AllowAnyHeader();
+policy.AllowAnyOrigin();
+policy.WithMethods("GET");
+policy.AllowAnyHeader();
 ```
 
 <img src="assets/options-methods-cors-policy-builder-one.png" alt="options-methods-cors-policy-builder-one" style="zoom:33%;" />
@@ -43,3 +45,4 @@ app.MapGet("/", () => {
     .RequireCors(MyAllowSpecificOrigins);
 ```
 
+Ou bien on a cofiguré `policy.AllowAnyMethod()` et là cette `policy` est directement valable pour toutes les méthodes.

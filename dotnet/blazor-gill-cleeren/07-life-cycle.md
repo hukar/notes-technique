@@ -12,6 +12,26 @@ C'est ici que les données sont mise en place pour le `composant`.
 
 C'est aussi ici que les `call` vers les `API` externe ont lieu.
 
+> Les `Parameter` venant de l'`url` sont aussi disponible (pour un `call` à l'`API` par exemple).
+>
+> ```cs
+> @page "/employeedetails/{EmployeeId:int}"
+> 
+> ...
+> 
+> @code {
+>     [Parameter]
+>     public int EmployeeId { get; set; }
+> 
+>     public Employee? Employee { get; set; }
+> 
+>     protected override void OnInitialized()
+>     {
+>         Employee = MockDataService.Employees.SingleOrDefault(employee => employee.EmployeeId == EmployeeId);
+>     }
+> }
+> ```
+
 
 
 ### `OnParametersSet` et `OnParametersSetAsync`

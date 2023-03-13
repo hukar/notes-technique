@@ -1,5 +1,38 @@
 # `FluentValidation`
 
+
+
+## `Dependency Injection`
+
+On peut utiliser une méthode d'extension qui injecte tous les `validator` automatiquement.
+
+Il faut le package :
+
+```
+FluentValidation.DependencyInjectionExtensions
+```
+
+Ensuite dans `Program.cs` :
+
+```cs
+builder.Services.AddValidatorsFromAssemblyContaining<CustomerValidator>();
+
+// ou
+
+builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+```
+
+Puis on injecte dans un constructeur avec `IValidator<MyValidator> validator` :
+
+```cs
+public SomeContructor(IValidator<ItemValidator> validator)
+{
+    // ...
+}
+```
+
+
+
 ## Mise en place
 
 On crée une application console très simple pour tester : `FVDemo` :
@@ -110,7 +143,7 @@ Objet contenant l'erreur :
 
 On utilise ici `PropertyName` et `ErrorMessage`.
 
-### Récupérer les erreurs dans un `IEnumearble`
+### Récupérer les erreurs dans un `IEnumerable`
 
 ```cs
 var result = roboValidator.Validate(robo);
@@ -658,35 +691,6 @@ something@something
 ```
 
 
-
-## `Dependency Injection`
-
-On peut utiliser une méthode d'extension qui injecte tous les `validator` automatiquement.
-
-Il faut le package :
-
-```
-FluentValidation.DependencyInjectionExtensions
-```
-
-Ensuite dans `Program.cs` :
-
-```cs
-builder.Services.AddValidatorsFromAssemblyContaining<CustomerValidator>();
-
-// ou
-
-builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-```
-
-Puis on injecte dans un constructeur avec `IValidator<MyValidator> validator` :
-
-```cs
-public SomeContructor(IValidator<ItemValidator> validator)
-{
-    // ...
-}
-```
 
 
 

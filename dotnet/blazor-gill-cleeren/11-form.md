@@ -188,6 +188,12 @@ On utilise `@bind-value` plutôt que `@bind`.
 
 
 
+### `InputCheckbox`
+
+
+
+
+
 ## Soumettre le `Form`
 
 Il y a des `Built-In Event` fournis avec `EditForm`.

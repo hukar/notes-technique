@@ -1,5 +1,25 @@
 # 11 `Form`
 
+## `Model`
+
+Voici une `class` remplaçant un `enum`:
+
+```cs
+public static class Gender
+{
+    public static string Male => "Male";
+    public static string Female => "Female";
+    public static string Other => "Other";
+
+    public static IEnumerable<string> ListOf()
+    {
+        yield return Male;
+        yield return Female;
+        yield return Other;
+    }
+}
+```
+
 
 
 ## `Data Binding`
@@ -190,7 +210,44 @@ On utilise `@bind-value` plutôt que `@bind`.
 
 ### `InputCheckbox`
 
+```html
+<InputCheckbox @bind-Value="@Employee.Smoker" />
+```
 
+
+
+### `InputRadioGroup`
+
+```html
+<InputRadioGroup @bind-value="@Employee.Gender">
+	@foreach(var gender in Gender.ListOf())
+    {
+    	<InputRadio Value="gender" />
+    }
+</InputRadioGroup>
+```
+
+
+
+### `InputDate`
+
+```html
+<InputDate @bind-value="@Employee.BirthDate" />
+```
+
+
+
+### `InputTextArea`
+
+```html
+<InputTextArea @bind-value="@Employee.Comment" />
+```
+
+
+
+### Resultat (sans `MudBlazor`)
+
+<img src="assets/form-without-mudblazor.png" alt="form-without-mudblazor" style="zoom:33%;" />
 
 
 
@@ -208,6 +265,32 @@ Il y a des `Built-In Event` fournis avec `EditForm`.
      OnValidSubmit="HandleValidSubmit"
      OnInvalidSubmit="HandleInvalidSubmit">
 	...
+    <button type="submit">
+        save Employee
+    </button>
 </EditForm>
+```
+
+```cs
+public async Task HandleValidSubmit()
+{
+	if(Employee.employeeId == 0)
+    {
+        // CREATE
+        
+    }
+    else
+    {
+        // UPDATE
+        
+    }
+}
+```
+
+```cs
+public async Task HandleInvalidSubmit()
+{
+
+}
 ```
 

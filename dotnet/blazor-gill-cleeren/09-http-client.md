@@ -237,6 +237,44 @@ public async Task<Employee?> GetEmployeeDetaisl(int employeeId)
 
 
 
+## Gestion des `Exception`
+
+Si le `Status Code` n'est pas un succès (`200`, `300`), une `exception est levée`.
+
+On peut vouloir gérer le problème en utilisant des pages spécifiques aux `status code`:
+
+```cs
+public async Task<Employee?> GetEmployeeDetails(int employeeId)
+{
+    Employee? employee = null;
+
+    try
+    {
+        employee = await _httpClient.GetFromJsonAsync<Employee>($"/employees/{employeeId}");
+    }
+     catch(HttpRequestException ex)
+    {
+        Console.WriteLine($"{ex.StatusCode}");
+        if(ex.StatusCode == HttpStatusCode.NotFound)
+        {
+            _navigationManager.NavigateTo("/404");
+        }
+        else
+        {
+            _navigationManager.NavigateTo("/error");
+        }
+    }
+    
+    return employee;
+}
+```
+
+<img src="assets/handling-404-error-not-found-api.png" alt="handling-404-error-not-found-api" />
+
+On pourrait utiliser un `interceptor` pour centraliser la gestion des erreurs:
+
+https://code-maze.com/global-http-error-handling-in-blazor-webassembly/
+
 
 
 

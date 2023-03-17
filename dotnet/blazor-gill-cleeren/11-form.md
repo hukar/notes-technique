@@ -274,16 +274,18 @@ Il y a des `Built-In Event` fournis avec `EditForm`.
 ```cs
 public async Task HandleValidSubmit()
 {
-	if(Employee.employeeId == 0)
+	if(IsCreateMode)
     {
-        // CREATE
-        
+        await EmployeeDataService.AddEmployee(Employee);
+        Console.WriteLine("New Employee  created");
     }
     else
     {
-        // UPDATE
-        
+        await EmployeeDataService.UpdateEmployee(Employee);
+        Console.WriteLine($"Employee {EmployeeId} Updated");
     }
+
+    Console.WriteLine("The form is submitted");
 }
 ```
 

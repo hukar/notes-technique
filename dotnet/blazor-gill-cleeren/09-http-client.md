@@ -68,8 +68,16 @@ builder.Services.AddCors();
 
 app.UseCors(policy => 
     policy.WithOrigins("http://localhost:5135")
-    .AllowAnyMethod()
-    .WithHeaders(HeaderNames.ContentType));
+    .AllowAnyMethod();
+```
+
+Pour les verbes `POST` et `PUT` envoyant des données on doit ajouter :
+
+```cs
+
+    .WithHeaders(HeaderNames.ContentType);
+        // OU   
+    .WithHeaders("Content-Type");
 ```
 
 
@@ -233,6 +241,33 @@ Ma version:
 ```cs
 public async Task<Employee?> GetEmployeeDetaisl(int employeeId) 
     => await _httpClient.GetFromJsonAsync<Employee>($"/employees/{employeeId}");
+```
+
+
+
+### `AddEmployee`
+
+```cs
+public async Task AddEmployee(Employee employeeToAdd) 
+    => await _httpClient.PostAsJsonAsync("/employees", employeeToAdd);
+```
+
+
+
+### `UpdateEmployee`
+
+```cs
+public async Task UpdateEmployee(Employee employeeToUpdate)
+    => await _httpClient.PutAsJsonAsync($"/employees", employeeToUpdate);
+```
+
+
+
+### `DeleteEmployee`
+
+```cs
+public async Task DeleteEmployee(int employeeId)
+    => await _httpClient.DeleteAsync($"/employees/{employeeId}");
 ```
 
 

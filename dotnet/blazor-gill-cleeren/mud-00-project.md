@@ -1,4 +1,4 @@
-# 01 `Blazor` project
+# mud-00 `Blazor` project avec `MudBlazor`
 
 ## Création du projet en `.net 7` avec `MudBlazor`
 
@@ -123,7 +123,7 @@ Avec une `AppBar` et un `Drawer`:
 
 Avec un bouton `hamburger`:
 
-```html
+```ruby
 <MudLayout>
     <MudAppBar>
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />

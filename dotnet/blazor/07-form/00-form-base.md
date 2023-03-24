@@ -20,4 +20,4 @@ Syntaxe d'un composant de formulaire de base :
 }  
 ```
 
-Deux paaramètres permettent de passer le `Model` et la fonction `callback` en cas de `soumission` du formulaire.
+Deux paramètres permettent de passer le `Model` et la fonction `callback` en cas de `soumission` du formulaire.

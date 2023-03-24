@@ -1,5 +1,15 @@
 # 11 `Form`
 
+## `@using`
+
+Dans `_Imports.razor` on doit ajouter la librairie `Components.Forms` :
+
+```cs
+@using Microsoft.AspNetCore.Components.Forms
+```
+
+
+
 ## `Model`
 
 Voici une `class` remplaçant un `enum`:

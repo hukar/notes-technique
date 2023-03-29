@@ -313,6 +313,35 @@ Property : DateOfBirth Error Message : Must be over 18
 
 
 
+## Une version `MustAsync`
+
+```cs
+public class RobotValidator : AbstractValidator<Robot>
+{
+    private readonly IRobotRepository _repo;
+
+    public RobotValidator(IRobotRepository repo)
+    {
+        _repo = repo;
+
+        RuleFor(r => r.FavouriteWeapon)
+            .MustAsync(IsWeaponExist).WithMessage("cette weapon n'existe pas");
+    }
+
+    private async Task<bool> IsWeaponExist(Robot robot,
+        Weapon? weapon, ValidationContext<Robot> context, CancellationToken token)
+    {
+        var existingWeapons = await _repo.GetAllWeapons(); // call API REST
+        
+        return existingWeapons.Contains(weapon);
+    }
+}
+```
+
+C'est la méthode `ValidateAsync` qui doit être appelée sur le `validator`.
+
+
+
 ## Un autre : `Custom`
 
 `Custom` permet de créer des règles ayant plusieurs cas de figure et donc plusieurs méssages d'erreur différents :

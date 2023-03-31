@@ -15,3 +15,19 @@ On peut régler la couleur de l'icône uniquement grâce à la propriété `Icon
 ```
 
 <img src="assets/employee-details-button-icon-color-custom.png" alt="employee-details-button-icon-color-custom" />
+
+
+
+## Élévation du bouton: `DisableElevation="true"`
+
+```ruby
+<MudButton 
+		 Variant="Variant.Filled" 
+		 Color="Color.Primary">Button One</MudButton>
+	 <MudButton 
+		 Variant="Variant.Filled" 
+		 Color="Color.Primary" 
+		 DisableElevation="true">Button Two</MudButton>
+```
+
+<img src="assets/button-elevation-disable-or-not.png" alt="button-elevation-disable-or-not" />

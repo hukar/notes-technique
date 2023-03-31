@@ -106,7 +106,7 @@ On peut ajouter un attribut `AnchorOrigin` pour déterminer comment apparait le 
 
 `<FluentValidationValidator @ref="_fluentValidationValidator"/>` est un composant venant du `package` : `Blazored.FluentValidation` et utilise `FluentValidation` comme base pour la validation automatique.
 
-Il suffit de désigner le message d'erreur à recevoir avec `For="() => Robot.FavouriteWeapon"`.
+Il suffit de désigner le message d'erreur lié à une `Property` avec `For="() => Robot.FavouriteWeapon"`.
 
 On utilise un `validator async` :
 

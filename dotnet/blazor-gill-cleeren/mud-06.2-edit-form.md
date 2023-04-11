@@ -75,6 +75,39 @@ public class Robot2Validator : AbstractValidator<Robot2>
 }
 ```
 
+> ## `Validation` utilisant `HttpClient`
+>
+> On doit utliser l'`Injection de Dépendance` pour pouvoir utiliser `HttpClient`.
+>
+> `@inject` et `[Inject]` ne marche que dans un composant, pas dans une classe classique.
+>
+> ```cs
+> public class RobotValidator : AbstractValidator<Robot>
+> {
+>     private readonly HttpClient? _client;
+> 
+> 
+>     public RobotValidator(HttpClient client)
+>     {
+>         _client = client;
+>         RuleFor(r => r.CodeName)
+>             .NotEmpty().WithMessage("Un robot doit avoir un Code Name")
+>             .Length(3, 8).WithMessage("Le Code Name ne doit être ni trop long ni trop court");
+>         RuleFor(r => r.PreferredWeapon)
+>             .NotEmpty().WithMessage("Une arme est obligatoire")
+>             .MustAsync(IsExistingWeapon).WithMessage("Une arme se doit d'exister");
+>     }
+>     
+>     private async Task<bool> IsExistingWeapon(Weapon weaponToCheck, CancellationToken token)
+>     {
+>         var query = $"/robots/isweaponexists?id={weaponToCheck.Id}&name={weaponToCheck.Name}";
+>         return await _client!.GetFromJsonAsync<bool>(query, token);
+>     }
+> }
+> ```
+>
+> `FluentValidationValidator` s'occupe apparemment de l'injection de `HttpClient` car le code fonctionne sans erreurs.
+
 
 
 ## Validation `Async`hrone

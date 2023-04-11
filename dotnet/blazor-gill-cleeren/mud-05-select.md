@@ -132,6 +132,15 @@ public class RobotValidatorAsync : AbstractValidator<Robot>
 }
 ```
 
+Ou un `overload` plus simple:
+
+```cs
+private async Task<bool> IsWeaponExist(Weapon? weapon, CancellationToken token)
+     => await _repo.IsWeaponExists(weapon);
+```
+
+
+
 Le fait d'utiliser un `async validator` n'autorise plus l'utilisation de `OnValidSubmit` et `OnInvalidSubmit` car alors le formulaire est toujours valide.
 
 Il faut utiliser `OnSubmit` et gérer soit même la validation.
@@ -216,6 +225,8 @@ Avec un `validator async`, on utilise `ValidateAsync`.
 </MudSelect>
 ```
 
+> ### ! c'est `@bind-SelectedValues` et pas `@bind-Value`.
+
 Dans la classe `Robot.cs`
 
 ```cs
@@ -260,7 +271,27 @@ Et cela fonctionne:
 
 Ce n'est peut-être malgré tout pas une bonne pratique de laisser un `IEnumerable` non initialisé.
 
-
+> Je n'arrive pas à ajouter la validation automatique (`EditForm` + `Blazored.Fluentvalidation`) au `MudSelect` avec `MultiSelection="true"`:
+>
+> ```cs
+> <EditForm Model="_robotModel" OnSubmit="OnSubmitHandler">
+>     <FluentValidationValidator @ref="_validator" />
+> 
+> 	<MudSelect
+>         MultiSelection="true"
+>         @bind-SelectedValues="_robotModel.Weapons"
+>         For="_robotModel.Weapons"
+>         Label="Select weapon">
+>         @foreach (var weapon in _weapons)
+>         {
+>             <MudSelectItem Value="weapon">@weapon.Name</MudSelectItem>
+>         }
+>     </MudSelect>
+> ```
+>
+> <img src="assets/problem-error-mudselect-multi-plat.png" alt="problem-error-mudselect-multi-plat" />
+>
+> On a un problème de conversion : à voire dans les prochiane versions de `MudBlazor`.
 
 
 

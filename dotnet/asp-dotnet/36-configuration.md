@@ -115,7 +115,28 @@ my secret : sqlite connection db
 my secret : sqlite connection db
 ```
 
+### Chemin vers le fichier `*settings.json`
 
+On peut utiliser les directive vue plus haut dans le fichier `.csproj`
+
+```xml
+<ItemGroup>
+	<None Update="hukarsettings.json">
+		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</None>
+</ItemGroup>
+```
+
+ou bien directement dans le `ConfigurationBuilder`: `SetBasePath`
+
+```cs
+var configuration = new ConfigurationBuilder()
+                            .SetBasePath(Directory.GetCurrentDirectory())
+                            .AddJsonFile("hukarsettings.json")
+                            .Build();
+```
+
+Pour que le fichier de `config` soit copié dans le repértoire de l'exécutable (`bin`), il faut utiliser les directives dans `.csproj`.
 
 ## Dans une `variable d'environement`
 
@@ -408,6 +429,101 @@ string? trueToneStr = configColors["trueTone"];
 ```
 
 
+
+## *binder* avec `Get<T>`
+
+`hukarsettings.json`
+
+```json
+{
+    "dbConnections": {
+        "sqliteConnection": "Data Source=mydb.db;",
+        "sqlServerConnection": "Server=myServerAddress;Database=myDataBase;User Id=myUsername;Password=myPassword;"
+    },
+    "urlEndpoints": {
+        "customerEndpoint": "https://MyApp.be/customer",
+        "productEndpoint": "https://MyApp.be/product",
+        "isRetryOn": true,
+        "numberOfTries": 10,
+        "dateMaybeNull": "2023-12-08"
+    }
+}
+```
+
+> Nécessite toujours:
+>
+> ```
+> Microsoft.Extensions.Configuration.Binder
+> ```
+>
+> 
+
+On peut aussi laisser le *binder* instancier l'objet lui-même:
+
+```cs
+public class EndpointConfiguration
+{
+    public string CustomerEndpoint { get; init; } = string.Empty;
+    public string ProductEndpoint { get; init; } = string.Empty;
+    public bool IsRetryOn { get; init; }
+    public int NumberOfTries { get; init; }
+    public DateTime? dateMaybeNull { get; init; }
+}
+```
+
+```cs
+var endpointConfiguration = configuration.GetSection("urlEndpoints").Get<EndpointConfiguration>();
+```
+
+On peut ensuite utiliser l'objet de configuration:
+
+```cs
+var customerEndpoint = endpointConfiguration.CustomerEndpoint;
+var IsRetryOn = endpointConfiguration.IsRetryOn;
+var NumberOfTries = endpointConfiguration.NumberOfTries;
+var dateMaybeNull = endpointConfiguration.dateMaybeNull;
+
+WriteLine(customerEndpoint); // https://MyApp.be/customer
+WriteLine(IsRetryOn); // true
+WriteLine(NumberOfTries); // 10
+WriteLine(dateMaybeNull); // 12/8/2023 12:00:00 AM
+```
+
+### On peut aussi utiliser un `record` le reste du code ne change pas.
+
+```cs
+public record EndpointConfiguration(
+    string CustomerEndpoint, 
+    string ProductEndpoint, 
+    bool IsRetryOn, 
+    int NumberOfTries, 
+    DateTime? dateMaybeNull
+);
+```
+
+
+
+### `Init-Only`
+
+Si on utilise une classe pour *binder*, il faut veiller à ne pas avoir la possibilitté de réécrire une propriété:
+
+```cs
+public class EndpointConfiguration
+{
+    public string CustomerEndpoint { get; set; } = string.Empty;
+    // ...
+```
+
+```cs
+endpointConfiguration.CustomerEndpoint = "new route to customer";
+WriteLine(endpointConfiguration.CustomerEndpoint); // new route to customer
+```
+
+Ce qui n'est pas souhaitable, la configuration doit rester en `read-only`.
+
+Il suffit pour les classes d'utiliser `init` à la place de `set` ou directement un `record`.
+
+<img src="assets/with-record-read-only-configuration.png" alt="with-record-read-only-configuration" />
 
 
 

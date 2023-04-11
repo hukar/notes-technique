@@ -89,7 +89,7 @@ L'emplacement des pages est représenté par `@Body`.
 
 ## Choix et ajout du `template`
 
-De base:
+### De base:
 
 ```html
 <MudLayout>
@@ -101,9 +101,21 @@ De base:
 
 <img src="assets/base-layout-mudblazor.png" alt="base-layout-mudblazor" />
 
+### Centrer le contenu `MudContainer`
+
+```html
+<MudMainContent>
+    <MudContainer MaxWidth="MaxWidth.Medium">
+        @Body
+    </MudContainer>
+</MudMainContent>
+```
+
+<img src="assets/mudcontainer-center-content.png" alt="mudcontainer-center-content" />
 
 
-Avec une `AppBar` et un `Drawer`:
+
+### Avec une `AppBar` et un `Drawer`:
 
 ```html
 <MudLayout>
@@ -114,14 +126,18 @@ Avec une `AppBar` et un `Drawer`:
 
     </MudDrawer>
     <MudMainContent>
-        @Body
+         <MudContainer MaxWidth="MaxWidth.Medium">
+            @Body
+        </MudContainer>
     </MudMainContent>
 </MudLayout>
 ```
 
 <img src="assets/template-with-appbar-drawer.png" alt="template-with-appbar-drawer" />
 
-Avec un bouton `hamburger`:
+
+
+### Avec un bouton `hamburger`:
 
 ```ruby
 <MudLayout>
@@ -133,7 +149,9 @@ Avec un bouton `hamburger`:
         
     </MudDrawer>
     <MudMainContent>
-        @Body
+         <MudContainer MaxWidth="MaxWidth.Medium">
+            @Body
+        </MudContainer>
     </MudMainContent>
 </MudLayout>
 @code {
@@ -147,22 +165,6 @@ Avec un bouton `hamburger`:
 ```
 
 <img src="assets/open-and-close-drawer.png" alt="open-and-close-drawer" />
-
-
-
-## Centrer le contenu `MudContainer`
-
-```html
-<MudMainContent>
-    <MudContainer MaxWidth="MaxWidth.Medium">
-        @Body
-    </MudContainer>
-</MudMainContent>
-```
-
-<img src="assets/mudcontainer-center-content.png" alt="mudcontainer-center-content" />
-
-
 
 
 

@@ -127,6 +127,46 @@ On utilise une référence sur la balise avec `@ref`.
 
 <img src="assets/error-code-in-console-delete.png" alt="error-code-in-console-delete" />
 
+On va créer un `component` (en fait ici juste la partie `class`) `CustomErrorBundary`:
+
+```cs
+using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+
+public class CustomErrorBoundary : ErrorBoundary
+{
+    [Inject] public IWebAssemblyHostEnvironment Environment { get; set; }
+    
+    protected override Task OnErrorAsync(Exception exception)
+    {
+        return Environment.IsDevelopment() 
+            ? base.OnErrorAsync(exception) 
+            : Task.CompletedTask;
+    }
+}
+```
+
+Et dans `MainLayout`, on utilise `CustomErrorBoundary` à la place de `ErrorBoundary`:
+
+```html
+<CustomErrorBoundary @ref="_errorBoundary" Context="Exception">
+    <ChildContent>
+        @Body
+    </ChildContent>
+    <ErrorContent>
+        // ...
+    </ErrorContent>
+</CustomErrorBoundary>
+```
+
+```cs
+@code {
+    bool _drawerOpen = true;
+
+    CustomErrorBoundary _errorBoundary = default!;
+    // ...
+```
+
 
 
 

@@ -8,7 +8,7 @@ Il y a prévalence des `provider` pour la détermination de la `culture` a emplo
 
 Le `3rd` est celui déterminé par les réglages du navigateur et qui se traduit par le `header` : `Accept-Language`.
 
-Le `4th` est celui définit par le `middleware` : `AddRequestLocalization`, c'est le dernier à être choisi, seulement si aucun autre `provider` n'est présent ou compatible avec l'application.
+Le `4th` est celui définit par le `middleware` : `UseRequestLocalization` et l'`option` : `.SetDefaultCulture("fr-BE")`, c'est le dernier à être choisi, seulement si aucun autre `provider` n'est présent ou compatible avec l'application.
 
 
 

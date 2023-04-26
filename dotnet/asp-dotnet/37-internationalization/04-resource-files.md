@@ -71,8 +71,8 @@ On a ici cette arborescence:
 Dans le code:
 
 ```cs
-app.MapGet("/localizer", (IStringLocalizer<Robot> Localizer) => {
-    return $"{Localizer["CodeName"]}: TT-674 {Localizer["PowaGun"]}: Megatron Gun";
+app.MapGet("/localizer", (IStringLocalizer<Robot> localizer) => {
+    return $"{localizer["CodeName"]}: TT-674 {localizer["PowaGun"]}: Megatron Gun";
 })
 ```
 
@@ -110,7 +110,7 @@ var supportedCulture = new[] {"fr-FR", "en-US", "it", "pt"};
 Le `endpoint` complet:
 
 ```cs
-app.MapGet("/localizer", (IStringLocalizer<Robot> Localizer, HttpContext context) => {
+app.MapGet("/localizer", (IStringLocalizer<Robot> localizer, HttpContext context) => {
     var output = $"Date : {DateTime.Now.ToLongDateString()}\n\n";
 
     var cultureInfo = CultureInfo.CurrentCulture;
@@ -122,7 +122,7 @@ app.MapGet("/localizer", (IStringLocalizer<Robot> Localizer, HttpContext context
 
     output += $"request culture: {requestCultureInfo!.RequestCulture.Culture}, request culture UI: {requestCultureInfo!.RequestCulture.UICulture}\n\n";
 
-    output += $"{Localizer["CodeName"]}: TT-674 {Localizer["PowaGun"]}: Megatron Gun";
+    output += $"{localizer["CodeName"]}: TT-674 {localizer["PowaGun"]}: Megatron Gun";
 
     return output;
 });

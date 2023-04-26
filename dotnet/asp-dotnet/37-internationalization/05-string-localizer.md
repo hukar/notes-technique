@@ -12,7 +12,7 @@ Il y a deux `interfaces` utilisables : `IStringLocalizer/IStringLocalizer<T>` et
 
 Localise un `string`.
 
-Possède les méthodes `.GetString()` et `GetAllStrings`.
+Possède les méthodes `.GetString()` et `.GetAllStrings()`.
 
 
 

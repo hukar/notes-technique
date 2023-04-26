@@ -193,6 +193,8 @@ Date: 21.04.2023 15:19:33
 
 On fournit la `Culture` par défaut de l'application avec `.SetDefaultCulture`, on peut aussi définir une liste des `Cultures` supportées par notre application avec `.AddSupportedCultures` et `.AddSupportedUICultures`.
 
+> Par défaut il semble que l'unique `supported culture` soit `en-US`.
+
 Syntaxe avec `lambda` pour passer les options:
 
 ```cs
@@ -207,119 +209,6 @@ app.UseRequestLocalization(options => {
 ```
 
 Cette liste des `supported cultures` a du sens avec des `Razor Pages` ou `MVC` et supplante les réglages du navigateur afin de ne gérer que les `cultures` que l'on souhaite et imposé une `culture` par défaut.
-
-
-
-## `Culture` provider
-
-Il y a prévalence des `provider` pour la détermination de la `culture` a employer.
-
-<img src="assets/culture-provider-ranking-preseance.png" alt="culture-provider-ranking-preseance" />
-
-Le `3rd` est celui déterminé par les réglages du navigateur et qui se traduit par le `header` : `Accept-Language`.
-
-Le `4th` est celui définit par le `middleware` : `AddRequestLocalization`, c'est le dernier à être choisi, seulement si aucun autre `provider` n'est présent ou compatible avec l'application.
-
-
-
-## `Query String Culture` provider
-
-```cs
-builder.Services.Configure<RequestLocalizationOptions>(options => {
-    var supportedCultures = new[] { "fr", "en", "de", "es" };
-    
-    options
-        .AddSupportedCultures(supportedCultures)
-        .AddSupportedUICultures(supportedCultures)
-        .SetDefaultCulture("fr");
-});
-
-// ...
-
-app.UseRequestLocalization();
-```
-
-On va ensuite pouvoir récupérer cette liste par injection de dépendance dans notre `endpoint`:
-
-```cs
-app.MapGet("/date", (IOptions<RequestLocalizationOptions> LocalizationOptions) => {
-    // ...
-```
-
-On va aussi récupérer le `HttpContext` pour regarder quelle culture est passée par la requête :
-
-```cs
-app.MapGet("/date", (IOptions<RequestLocalizationOptions> LocalizationOptions, 
-                     HttpContext context) => {
-	var requestCulturInfo = context.Features.Get<IRequestCultureFeature>();
-
-    var output = "-";
-    
-    foreach(var culture in LocalizationOptions.Value.SupportedCultures!)
-    {
-        if(requestCulturInfo!.RequestCulture.Culture.ToString() == culture.ToString())
-            output += $"||{culture} ||-";
-        else
-            output += $"{culture}-";
-    }
-
-    output += "\n\n";
-
-
-    output += $"Current Culture: {CultureInfo.CurrentCulture}\n";
-    output += $"Current UI Culture: {CultureInfo.CurrentUICulture}\n";
-    output += $"Date: {DateTime.Now.ToLongDateString()}";
-
-    return output;
-});
-```
-
-On met en évidence quelle culture est passée par la requête pour simuler une classe sur un bouton par exemple:
-
-<img src="assets/preseance-provider-query-string.png" alt="preseance-provider-query-string" />
-
-On passe donc la culture qui fera préséance grâce à un `query string`:
-
-```python
-http://localhost:5139/date?culture=fr
-```
-
-Dans le dernier cas comme la `culture` : `it` n'est pas supportée par l'application, c'est le `provider` navigateur qui détermine la culture `en` ( car il n'y a pas de `cookie`).
-
-<img src="assets/english-language-setting-browser.png" alt="english-language-setting-browser" />
-
-Si on supprime cette possibilité:
-
-<img src="assets/remove-possible-language-in-browser.png" alt="remove-possible-language-in-browser" />
-
-Ce qui va engendrer le `Accept-Language` de la requête:
-
-<img src="assets/accept-langiage-headr-set-it.png" alt="accept-langiage-headr-set-it" />
-
-1. `Query String` : `it` => pas accepté par l'application (cf `supportedCulture`)
-
-2. `Accept-Language` : `it`
-
-3. `Cookie`: il n'y en a pas
-
-4. Le `middleware` : `UseRequestLocalization` qui a sa valeur par défaut sur `fr`
-   ```cs
-   // pour rappel
-   builder.Services.Configure<RequestLocalizationOptions>(options => {
-       var supportedCultures = new[] { "fr", "en", "de", "es" };
-       
-       options
-           .AddSupportedCultures(supportedCultures)
-           .AddSupportedUICultures(supportedCultures)
-           .SetDefaultCulture("fr");
-   });
-   ```
-
-
-
-<img src="assets/final-culture-provider-fournish-fr-2090260.png" alt="final-culture-provider-fournish-fr" />
-
-
 
  
 

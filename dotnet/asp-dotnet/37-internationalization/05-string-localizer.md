@@ -41,5 +41,40 @@ On va utiliser un `string` paramétré à tous les niveaux.
 ### Utilisation avec le service `Localizer` dans un `endpoint`
 
 ```cs
+app.MapGet("/translation", (IStringLocalizer<Data> localizer) 
+        => localizer[
+            "Robot Say Date {0} and Random int {1}", 
+            DateTime.Now.ToLongDateString(),
+            new Random().Next(0, 21)
+        ].Value
+    );
 ```
 
+
+
+## `Custom Localizer`
+
+```cs
+public class MyCustomLocalizer : IStringLocalizer
+{
+    public LocalizedString this[string name]
+    {
+        get { /* */ }
+    }
+    
+    public LocalizedString this[string name, params object[] arguments]
+    {
+        get { /* */ }
+    }
+}
+```
+
+On l'ajoute à l'application:
+
+```cs
+builder.Services.AddSingleton<MyCustomLocalizer>();
+```
+
+Et on peut l'injecter où on désire.
+
+> Je n'ai pas réussi à en créer un ... à voire ???

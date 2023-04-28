@@ -145,6 +145,44 @@ Pour l'affichage d'une application `console` c'est `CurrentCulture` et non `Curr
 
 
 
+### Dans une application `console`
+
+`CurrentCulture` va chercher les réglages de l'ordinateur:
+
+```cs
+using System.Globalization;
+
+var cultureInfo = CultureInfo.CurrentCulture;
+var dateNow = DateTime.Now.ToLongDateString();
+var dateNowShort = DateTime.Now.ToShortDateString();
+
+Console.WriteLine($"culture info: {cultureInfo}\ndate now: {dateNow}");
+```
+
+<img src="assets/language-default-on-console-app-os-settings.png" alt="language-default-on-console-app-os-settings" />
+
+On voit que le résultat dépend des `settings` au niveau de `MacOS`.
+
+### De même dans une application `web`
+
+```cs
+app.MapGet("/", () =>
+{
+    var currentCulture = CultureInfo.CurrentCulture;
+    var dateNow = DateTime.Now.ToLongDateString();
+
+    return $"culture: {currentCulture}\nDate now: {dateNow}";
+});
+```
+
+<img src="assets/culture-info-in-web-api.png" alt="culture-info-in-web-api" />
+
+> ## Différence entre `VSCode` et `Rider`
+>
+> Les exemples sont ceux de `Rider`, si je lance le même code sur `VSCode`, la `current culture` sera systématiquement `en-US`, ce qui n'est plus en relation avec les `settings` de `MacOS`:
+>
+> <img src="assets/strange-current-culture-behavior.png" alt="strange-current-culture-behavior" />
+
 ## Configurer le `Localisation Middleware`
 
 Cette fois-ci on part d'une `minimal api`:

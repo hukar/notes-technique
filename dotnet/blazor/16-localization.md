@@ -235,6 +235,92 @@ Maintenant tout fonctionne correctement.
 
 
 
+## Version avec `Blazored.LocalStorage`
+
+### Mise en place
+
+```bash
+dotnet add package Blazored.LocalStorage
+```
+
+Et dans `Program.cs`
+
+```cs
+using Blazored.LocalStorage;
+
+builder.Services.AddBlazoredLocalStorage(
+    config => config.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles
+);
+```
+
+> ## Remarque
+>
+> À la suite d'une erreur avec un objet `CultureInfo` que j'essayais de placer dans le `LocaleStorage` dans sa version typée, j'obtenais une erreur de type `Circular Reference`.
+>
+> `ReferenceHandler.IgnoreCycles` assigne une valeur `null` aux propriétés posant problème.
+>
+> Dans sa version typé, `LocaleStorage` utilise `System.Text.Json` pour `sérialiser` et `désérialiser` les objets.
+
+Ensuite on veut définir la `culture` au démarrage de l'application `Blazor`:
+
+```cs
+// toujours dans Program.cs
+var localStorage = app.Services.GetRequiredService<ILocalStorageService>();
+
+CultureInfo currentCulture;
+
+var codeLang = await localStorage.GetItemAsStringAsync("codeLang");
+
+if (codeLang is null)
+{
+    codeLang = "fr"; // la langue par défaut
+    await localStorage.SetItemAsync("codeLang", codeLang);
+}
+
+currentCulture = new CultureInfo(codeLang);
+
+CultureInfo.DefaultThreadCurrentCulture = currentCulture;
+CultureInfo.DefaultThreadCurrentUICulture = currentCulture;
+
+await app.RunAsync();
+```
+
+
+
+### Dans le `composant`
+
+On doit injecter quelques `services`
+
+```ruby
+@inject IStringLocalizer<Data> Localizer
+@inject ILocalStorageService LocalStorage
+@inject NavigationManager NavigationManager
+```
+
+On traduit comme ceci:
+
+```ruby
+<h1>@Localizer["Title"]</h1>
+```
+
+Voici un `selecteur`
+
+```ruby
+<select @onchange="OnSelectLang">
+    <option disabled>@Localizer["SelectLang"]</option>
+    @foreach (var codeLang in _supportedLanguages)
+    {
+        <option value="@codeLang" selected="@(CultureInfo.CurrentCulture.Name == codeLang)">@codeLang</option>
+    }
+</select>
+```
+
+Je me base ici sur l'événement `@onchange`
+
+à finir ....
+
+
+
 
 
 

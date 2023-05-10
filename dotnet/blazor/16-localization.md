@@ -274,7 +274,7 @@ var codeLang = await localStorage.GetItemAsStringAsync("codeLang");
 if (codeLang is null)
 {
     codeLang = "fr"; // la langue par défaut
-    await localStorage.SetItemAsync("codeLang", codeLang);
+    await localStorage.SetItemAsStringAsync("codeLang", codeLang);
 }
 
 currentCulture = new CultureInfo(codeLang);
@@ -285,7 +285,7 @@ CultureInfo.DefaultThreadCurrentUICulture = currentCulture;
 await app.RunAsync();
 ```
 
-
+On utilise `SetItemAsStringAsync` pour éviter la stérilisation de `SetItemAsync`, de même pour `GetItemAsStringAsync`.
 
 ### Dans le `composant`
 
@@ -317,7 +317,19 @@ Voici un `selecteur`
 
 Je me base ici sur l'événement `@onchange`
 
-à finir ....
+```cs
+@code {
+    readonly string[] _supportedLanguages = new[] { "fr", "it", "en" };
+
+    async Task OnSelectLang(ChangeEventArgs evt)
+    {
+        await LocalStorage.SetItemAsStringAsync("codeLang", (string)evt.Value!);
+        NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad:true);
+    }
+}
+```
+
+On récupère la valeur du `select` avec `evt.Value`, et on force le rechargement de l'application avec `forceload:true`.
 
 
 

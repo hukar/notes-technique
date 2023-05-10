@@ -186,6 +186,8 @@ Une `validation` basique est incluse.
 
 Ils supporte le `Two-way Data Binding` avec une syntaxe légèrement différente.
 
+> #### ! c'est `@bind-Value` avec un `V` majuscule !
+
 
 
 ### `InputText`
@@ -193,12 +195,20 @@ Ils supporte le `Two-way Data Binding` avec une syntaxe légèrement différente
 ```html
 <EditForm Model="@Employee">
 	<InputText id="lastName"
-               @bind-value="@Employee.LastName"
+               @bind-Value="@Employee.LastName"
                placeholder="Enter last name"></InputText>
 </EditForm>
 ```
 
-On utilise `@bind-value` plutôt que `@bind`.
+On utilise `@bind-Value` plutôt que `@bind`.
+
+
+
+### `InputNumber`
+
+```html
+<InputNumber @bind-Value="Employee.age"/>
+```
 
 
 
@@ -206,7 +216,7 @@ On utilise `@bind-value` plutôt que `@bind`.
 
 ```html
 <InputSelect id="country" class="border-solid border-2 mud-border-primary pa-4"
-     @bind-value="@Employee.CountryId">
+     @bind-Value="@Employee.CountryId">
 	
     @foreach(var country in countries)
     {
@@ -229,7 +239,7 @@ On utilise `@bind-value` plutôt que `@bind`.
 ### `InputRadioGroup`
 
 ```html
-<InputRadioGroup @bind-value="@Employee.Gender">
+<InputRadioGroup @bind-Value="@Employee.Gender">
 	@foreach(var gender in Gender.ListOf())
     {
     	<InputRadio Value="gender" />
@@ -242,7 +252,7 @@ On utilise `@bind-value` plutôt que `@bind`.
 ### `InputDate`
 
 ```html
-<InputDate @bind-value="@Employee.BirthDate" />
+<InputDate @bind-Value="@Employee.BirthDate" />
 ```
 
 
@@ -250,7 +260,7 @@ On utilise `@bind-value` plutôt que `@bind`.
 ### `InputTextArea`
 
 ```html
-<InputTextArea @bind-value="@Employee.Comment" />
+<InputTextArea @bind-Value="@Employee.Comment" />
 ```
 
 

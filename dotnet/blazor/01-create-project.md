@@ -16,6 +16,16 @@ dotnet new blazorwasm -ho -au Individual -p -o MyProject
 
 
 
+### Un projet vide
+
+```bash
+dotnet new blazorwasm-empty -o MyBlazorApp
+```
+
+
+
+
+
 ## Lancer un projet `--hosted`
 
 Il faut lancer le projet dans le repértoire `Server` et faire un classique `dotnet run` :

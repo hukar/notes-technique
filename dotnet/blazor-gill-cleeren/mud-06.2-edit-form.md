@@ -6,6 +6,12 @@
 
 ## Exemple avec `Blazored.FluentValidation`
 
+```bash
+dotnet add package Blazored.FluentValidation
+```
+
+
+
 ```ruby
 @using Blazored.FluentValidation
 

@@ -4,6 +4,18 @@
 
 
 
+## Utiliser un `EditForm`
+
+### Il faut absolument ajouter le `package` suivant: `Components.Forms`
+
+`_Import.cs`
+
+```cs
+@using Microsoft.AspNetCore.Components.Forms
+```
+
+
+
 ## Exemple avec `Blazored.FluentValidation`
 
 ```bash

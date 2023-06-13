@@ -15,7 +15,7 @@ Pour travailler avec `EditContext` dans la partie `@code`, on crée une féfére
     myForm.EditContext.Validate();
     
     // Pour savoir si le formulaire a été "touché"
-    if(myForm.EditContext.IsMidified())
+    if(myForm.EditContext.IsModified())
     {
       // ... 
 ```

@@ -250,13 +250,97 @@ La validation reste `false` jusqu'au retour du `Validator Async`.
 
 
 
+## Problème de `reset` du formulaire
 
+```html
+<EditForm
+    @ref="_form"
+    Model="Demandeur"
+    OnSubmit="OnSubmit">
 
+    <FluentValidationValidator @ref="_fluentValidationValidator"/>
+    // ...
+    
+    <MudButton
+        ButtonType="ButtonType.Submit"
+        Disabled="!context.Validate() || !context.IsModified()">
+        @ActionLabel
+    </MudButton>
+```
 
+```cs
+async void OnSubmit()
+{
 
+    var result = await _fluentValidationValidator!.ValidateAsync();
 
+    if (result)
+    {
+       // Handle valid submit
 
+        Demandeur = new(); // <- ici je remet le modèle à zéro
+    } 
+    
+    // ...
+    StateHasChanged();
+```
 
+Si je soumets un formulaire valide et remets à jour le `Model` avec un nouvel objet j'obtient ce résultat:
+
+<img src="assets/problem-after-new-model-validation.png" alt="problem-after-new-model-validation" />
+
+La validation se déclenche alors que c'est censé être un nouveau formulaire.
+
+### Solution trouvée sur `StackOverflow`
+
+https://stackoverflow.com/questions/60917323/how-to-reset-custom-validation-errors-when-using-editform-in-blazor-razor-page/63356079#63356079
+
+L'idée est de se servir de `EditContext` et de le mettre à jour manuellement:
+
+```html
+<EditForm
+    @ref="_form"
+    EditContext="_editContext"
+    OnSubmit="OnSubmit">
+```
+
+```cs
+private EditContext? _editContext;
+
+protected override void OnInitialized()
+{
+_editContext = new(State.Demandeur);
+}
+
+async void OnSubmit()
+{
+    var result = await _fluentValidationValidator!.ValidateAsync();
+
+    if (result)
+    {
+        // Handle Valid Submit
+        State.Demandeur = new();
+        _editContext = new EditContext(State.Demandeur);
+    } 
+    
+    // ...
+    StateHasChanged();
+```
+
+<img src="assets/good-behavior-for-validation-form.png" alt="good-behavior-for-validation-form" />
+
+Le formulaire est bien à jour, sans `validation` enclenchée alors qu'il n'est pas encore modifier.
+
+Le bouton `submit` est bien `disabled` grâce à ce code:
+
+#### `Disabled="!context.Validate() || !context.IsModified()"`
+
+```html
+<MudButton
+    Disabled="!context.Validate() || !context.IsModified()">
+    + Ajouter un demandeur
+</MudButton>
+```
 
 
 

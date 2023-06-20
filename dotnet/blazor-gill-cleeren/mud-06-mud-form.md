@@ -4,6 +4,40 @@
 
 
 
+## `OnlyValidateIfDirty`
+
+### `OnlyValidateIfDirty="false"`
+
+```html
+<MudTextField
+    Label="Code Name"
+    @bind-Value="Robot.CodeName"
+    For="@(() => Robot.CodeName)"
+    OnlyValidateIfDirty="false"/>
+```
+
+<img src="assets/only-validate-if-dirty-false.png" alt="only-validate-if-dirty-false" />
+
+Si je rentre et sort dans un champs texte sans rien taper, je déclenche quand même la `validation`.
+
+
+
+### `OnlyValidateIfDirty="true"`
+
+```html
+<MudTextField
+    Label="Quote"
+    @bind-Value="Robot.Quote"
+    For="@(() => Robot.Quote)"
+    OnlyValidateIfDirty="true"/>
+```
+
+<img src="assets/only-validate-if-dirty-true.png" alt="only-validate-if-dirty-true" />
+
+Maintenant la `validation` n'est pas déclenché si je me contente seulement de prendre et perdre le `focus` dans un champs texte sans rien y entrer.
+
+
+
 ## Validation Simple: `Required` et `RequiredError`
 
 ```cs
@@ -41,10 +75,10 @@ On va ajouter trois `Button` pour contrôler notre `Form`:
 
 
 
-### `Reset Form`: `form.Reset()`
+### `Reset Form`: `form.ResetAsync()`
 
 ```cs
-<MudButton OnClick="@(()=>form.Reset())" Class="mx-2">Reset</MudButton>
+<MudButton OnClick="@(()=>form.ResetAsync())" Class="mx-2">Reset</MudButton>
 ```
 
 `success` reste ou passe à `false`, les champs sont vidés et `errors` est vidé aussi.
